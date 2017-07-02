@@ -30,7 +30,21 @@ class step:
     # Optimizer states (populated during step advance)
     eTime = 0.          # Elapsed race time (hours)
     gTime = 0.          # Global time (UTC format) ie. time on the clocks and watches
+    timezone = 0        # Timezone offset from UTC time
 
+
+    # Class constructor
+    def __init__(self, _stepNum, _ambTemp, _location, _stepDist, _inclination, _heading, _cloud, _wind):
+        self.stepNum = _stepNum
+        self.ambTemp = _ambTemp
+        self.location = _location
+        self.stepDistance = _stepDist
+        self.inclination = _inclination
+        self.isControlStop = False
+        self.isEndOfDay = False
+        self.heading = _heading
+        self.cloud = _cloud
+        self.wind = _wind
 
     # Advance one distance step forward
     # Uses function from "car" class
