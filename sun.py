@@ -6,7 +6,7 @@ from datetime import datetime
 # Latitude + to N
 # Longitude + to E
 # Returns a list of Elevation,
-def sun(gTime, timezone, location):
+def info(gTime, timezone, location):
     # Julian date calculation adapted from 'Practical Astronomy with your Calculator or Spreadsheet'
     # Not valid for Jan and Feb
     A = math.trunc(gTime.year / 100.)
@@ -114,7 +114,7 @@ def sun(gTime, timezone, location):
 
 
 def getSunRiseSetTime(gTime, timezone, location):
-    sunInfo = sun(gTime, timezone, location)
+    sunInfo = info(gTime, timezone, location)
     solarNoon = (720 - 4 * location[1] - sunInfo[2] + timezone * 60) / 1440
     hasr = math.degrees(math.acos(
         math.cos(math.radians(90.833)) / (math.cos(math.radians(location[0])) * math.cos(math.radians(sunInfo[3]))) -
@@ -149,15 +149,3 @@ def irradiance(sunInfo):
     # solar radiation on a horizontal plane on earth's surface with atmospheric attenuation
     ioh = io * tau * math.cos(math.radians(90 - sunInfo[0]))
     return ioh
-
-
-def main():
-    dt = datetime(2015, 10, 18, 12, 30)
-    sunInfo = sun(dt, 9.5, [-12.462827, 130.841782])
-    jd1 = irradiance(sunInfo)
-    print(jd1)
-    return
-
-
-if __name__ == "__main__":
-    main()
