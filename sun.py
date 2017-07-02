@@ -1,5 +1,9 @@
+# This is the sun
+# Calculates the solar angles and insolation parameters
+# Author: Frank Gu
+# Date: July 1st, 2017
+
 import math
-from datetime import datetime
 
 
 # location [lat long]

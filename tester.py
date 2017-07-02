@@ -1,6 +1,11 @@
-import sun
+# I use this file for tests; don't mind it...
+# Author: Frank Gu
+# Date: July 1st, 2017
+
 from datetime import datetime
-import math
+
+import sun
+
 
 def main():
     dt = datetime(2015, 10, 18, 12, 30)
