@@ -17,7 +17,8 @@ def main():
     sc = car.car()
     fname = raw_input('Please specify geometry file location: ')
     sc.loadArray(fname)
-    jd1 = sc.arrayArea
+    print(sc.arrayArea)
+    jd1 = sc.arrayIn(stp)
 
     print(jd1)
     return

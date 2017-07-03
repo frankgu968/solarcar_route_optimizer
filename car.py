@@ -8,18 +8,22 @@ import sun
 
 
 class car:
-    ELEC_LP_POWER = 15. # Electrical low-power system power = 15 W
-    arrayArea = 0.      # Area of the solar array (m2)
-    ARRAY_EFF = 0.237   # Solar panel nominal efficiency (24.3%)
-    MPPT_EFF = 0.97     # Average MPPT efficiency (97%)
-    BAT_EFF = 0.85      # Battery Coulombic efficiency
+    ELEC_LP_POWER = 15.  # Electrical low-power system power = 15 W
+    arrayArea = 0.  # Area of the solar array (m2)
+    ARRAY_EFF = 0.237  # Solar panel nominal efficiency (24.3%)
+    MPPT_EFF = 0.97  # Average MPPT efficiency (97%)
+    BAT_EFF = 0.85  # Battery Coulombic efficiency
     arrayGeometry = []  # Array geometry
 
     # -------------------- ARRAY START --------------------------------------------------
     # Load array geometry file
     def loadArray(self, fname):
-        mode = 0    # File parsing mode (0-Pass, 1-Node, 2-Elements)
+        mode = 0  # File parsing mode (0-Pass, 1-Node, 2-Elements)
         nodes = []  # Temporary container to hold nodes
+        # Rotational matrix to reposition the aerobody to point
+        tRot = np.array([[0, 1, 0],
+                         [-1, 0, 0],
+                         [0, 0, 1]])
 
         # Read the mesh file lines
         with open(fname) as f:
@@ -29,7 +33,7 @@ class car:
             # Parsing nodes
             if mode == 1:
                 if line == '$EndNodes':
-                    mode = 0    # Completion of nodes block
+                    mode = 0  # Completion of nodes block
 
                 else:
                     items = line.split(' ')
@@ -39,7 +43,7 @@ class car:
             # Parsing elements
             elif mode == 2:
                 if line == '$EndElements':
-                    mode = 0    # Completion of elements block
+                    mode = 0  # Completion of elements block
 
                 else:
                     items = line.split(' ')
@@ -48,11 +52,12 @@ class car:
                         a = int(items[5])
                         b = int(items[6])
                         c = int(items[7])
-                        v1 = np.subtract(nodes[b-1]/1000, nodes[a-1]/1000)
-                        v2 = np.subtract(nodes[c-1]/1000, nodes[a-1]/1000)
-                        arrNorm = np.cross(v1, v2)     # Normal vector
-                        self.arrayArea += 0.5 * np.linalg.norm(arrNorm)     # Rolling addition to array area
-                        self.arrayGeometry.append(arrNorm)                  # Store the normal vector
+                        v1 = np.subtract(nodes[b - 1] / 1000, nodes[a - 1] / 1000)
+                        v2 = np.subtract(nodes[c - 1] / 1000, nodes[a - 1] / 1000)
+                        arrNorm = np.cross(v1, v2)  # Normal vector
+                        meshNorm = np.matmul(arrNorm, tRot)
+                        self.arrayArea += 0.5 * np.linalg.norm(arrNorm)  # Rolling addition to array area
+                        self.arrayGeometry.append(meshNorm)  # Store the normal vector
             else:
                 if line == '$Nodes':
                     mode = 1
@@ -61,27 +66,39 @@ class car:
                     mode = 2
         return lines
 
-
-
     # Raw expected array input
     # Includes array geometry and temperature effects
     # Assumes array temperature = ambient (due to high speed free stream air)
     def arrayIn(self, stepInfo):
         sunInfo = sun.info(stepInfo.gTime, stepInfo.timezone, stepInfo.location)
-        insolation = sun.irradiance(sunInfo)    # The amount of power hitting the surface of the Earth
+        insolation = sun.irradiance(sunInfo)  # The amount of power hitting the surface of the Earth
+        power = 0.
 
         # TODO: Use the array mesh to calculate the effective solar collector normal area
+        # Create the sun's unit vector with Azimuth and elevation
+        sunVec = np.array([np.sin(np.deg2rad(sunInfo[1])) * np.cos(np.deg2rad(sunInfo[0])),
+                           np.cos(np.deg2rad(sunInfo[1])) * np.sin(np.deg2rad(sunInfo[0])),
+                           np.sin(np.deg2rad(sunInfo[0]))])
 
+        for meshElement in self.arrayGeometry:
+            # TODO: How to rotate the meshElement vector in 3D?
 
-        power = insolation * self.ARRAY_AREA * self.ARRAY_EFF
+            tMat = np.array([np.sin(np.deg2rad(stepInfo.heading)) * np.cos(np.deg2rad(90 - stepInfo.inclination)),
+                             np.cos(np.deg2rad(stepInfo.heading)) * np.sin(np.deg2rad(90 - stepInfo.inclination)),
+                             np.sin(np.deg2rad(90 - stepInfo.inclination))])
+            meshVec = np.matmul(meshElement, tMat)  # Transformed mesh element normal vector
+
+            power += insolation * np.abs(0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
+
+        # power = insolation * self.ARRAY_AREA * self.ARRAY_EFF
         return power
-
 
     # Maximum Power Point Tracker consolidating tracking and conversion efficiency
     def arrayOut(self, stepInfo):
         arrRaw = self.arrayIn(stepInfo)
         powerOut = arrRaw * self.MPPT_EFF
         return powerOut
+
     # -------------------- ARRAY END ----------------------------------------------------
 
     # -------------------- BATTERY START ------------------------------------------------
@@ -89,6 +106,7 @@ class car:
     def battOut(self, stepInfo):
         powerBat = stepInfo.pbattExp * self.BAT_EFF
         return powerBat
+
     # -------------------- BATTERY END --------------------------------------------------
 
     # -------------------- ELECTROMECHANICAL START --------------------------------------
@@ -97,14 +115,8 @@ class car:
 
         return
 
-
     # Calculate how fast the car will drive
     def calcSpeed():
 
         return
-    # -------------------- ELECTROMECHANICAL END ----------------------------------------
-
-
-
-
-
+        # -------------------- ELECTROMECHANICAL END ----------------------------------------
