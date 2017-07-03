@@ -14,7 +14,11 @@ def main():
     #sunInfo = sun.info(dt, 9.5, [-12.462827, 130.841782])
     stp.gTime = dt
     stp.timezone = 9.5
-    jd1 = car.arrayOut(stp)
+    sc = car.car()
+    fname = raw_input('Please specify geometry file location: ')
+    sc.loadArray(fname)
+    jd1 = sc.arrayArea
+
     print(jd1)
     return
 
