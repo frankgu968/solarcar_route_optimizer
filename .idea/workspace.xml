@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2668b710-fac1-41f6-8880-c74f796944b7" name="Default" comment="">
+    <list default="true" id="2668b710-fac1-41f6-8880-c74f796944b7" name="Default" comment="Completed code for calculating raw array input power&#10;Tests for the linear transformations pending">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/world_helpers.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/car.py" afterPath="$PROJECT_DIR$/car.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tester.py" afterPath="$PROJECT_DIR$/tester.py" />
@@ -29,11 +30,9 @@
       <file leaf-file-name="tester.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tester.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="249">
-              <caret line="19" column="22" lean-forward="false" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
-              <folding>
-                <element signature="e#89#118#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="329">
+              <caret line="23" column="10" lean-forward="true" selection-start-line="23" selection-start-column="10" selection-end-line="23" selection-end-column="10" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -41,11 +40,21 @@
       <file leaf-file-name="car.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/car.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="83" column="0" lean-forward="true" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
+            <state relative-caret-position="380">
+              <caret line="98" column="52" lean-forward="true" selection-start-line="98" selection-start-column="52" selection-end-line="98" selection-end-column="52" />
               <folding>
                 <element signature="e#148#166#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="world_helpers.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/world_helpers.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="80">
+              <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -85,6 +94,7 @@
         <option value="$PROJECT_DIR$/PowerBus.py" />
         <option value="$PROJECT_DIR$/sun.py" />
         <option value="$PROJECT_DIR$/step.py" />
+        <option value="$PROJECT_DIR$/world_helpers.py" />
         <option value="$PROJECT_DIR$/tester.py" />
         <option value="$PROJECT_DIR$/car.py" />
       </list>
@@ -292,13 +302,20 @@
       <option name="project" value="LOCAL" />
       <updated>1499053306028</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Partially completed array raw power output calculation. &#10;Still need to fix rotation of the car's heading and inclination">
+      <created>1499057293925</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1499057293925</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="26" width="1442" height="851" extended-state="6" />
     <layout>
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1125" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1125" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21895862" sideWeight="0.5277778" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21895862" sideWeight="0.4722222" order="6" side_tool="false" content_ui="tabs" />
@@ -328,7 +345,9 @@
     <MESSAGE value="Added &quot;car&quot; methods, and the &quot;step&quot; class. Scaffolded code; contents to be filled!" />
     <MESSAGE value="Work on car's array model begins. Need to complete the array mesh loading and parsing code." />
     <MESSAGE value="Encapsulated car into a class object&#10;Completed array model importation function&#10;Does NOT account for canopy shading..." />
-    <option name="LAST_COMMIT_MESSAGE" value="Encapsulated car into a class object&#10;Completed array model importation function&#10;Does NOT account for canopy shading..." />
+    <MESSAGE value="Partially completed array raw power output calculation. &#10;Still need to fix rotation of the car's heading and inclination" />
+    <MESSAGE value="Completed code for calculating raw array input power&#10;Tests for the linear transformations pending" />
+    <option name="LAST_COMMIT_MESSAGE" value="Completed code for calculating raw array input power&#10;Tests for the linear transformations pending" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -350,9 +369,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="320">
           <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#89#118#0" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -400,18 +417,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tester.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="249">
-          <caret line="19" column="22" lean-forward="false" selection-start-line="19" selection-start-column="22" selection-end-line="19" selection-end-column="22" />
-          <folding>
-            <element signature="e#89#118#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="329">
+          <caret line="23" column="10" lean-forward="true" selection-start-line="23" selection-start-column="10" selection-end-line="23" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/world_helpers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/car.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="83" column="0" lean-forward="true" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
+        <state relative-caret-position="380">
+          <caret line="98" column="52" lean-forward="true" selection-start-line="98" selection-start-column="52" selection-end-line="98" selection-end-column="52" />
           <folding>
             <element signature="e#148#166#0" expanded="true" />
           </folding>
