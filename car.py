@@ -75,18 +75,16 @@ class car:
         insolation = sun.irradiance(sunInfo)  # The amount of power hitting the surface of the Earth
         power = 0.
 
-        # TODO: Test SunVec!
         # Create the sun's unit vector with Azimuth and elevation
-        sunVec = np.array([np.sin(np.deg2rad(-sunInfo[1])) * np.cos(np.deg2rad(sunInfo[0])),
-                           np.cos(np.deg2rad(-sunInfo[1])) * np.sin(np.deg2rad(sunInfo[0])),
+        sunVec = -np.array([np.sin(np.deg2rad(sunInfo[1])) * np.cos(np.deg2rad(sunInfo[0])),
+                           np.cos(np.deg2rad(sunInfo[1])) * np.sin(np.deg2rad(sunInfo[0])),
                            np.sin(np.deg2rad(sunInfo[0]))])
 
         for meshElement in self.arrayGeometry:
             # Rotate the car in 3D with heading and elevation
             # Rotate the car's heading
-            # TODO: Test rotation matrix
-            tRotation = np.array([  [np.cos(np.deg2rad(-stepInfo.heading)), -np.sin(np.deg2rad(-stepInfo.heading)), 0],
-                                    [np.sin(np.deg2rad(-stepInfo.heading)), np.cos(np.deg2rad(-stepInfo.heading)), 0],
+            tRotation = np.array([  [np.cos(np.deg2rad(-stepInfo.heading)), -np.sin(-np.deg2rad(stepInfo.heading)), 0],
+                                    [np.sin(np.deg2rad(-stepInfo.heading)), np.cos(-np.deg2rad(stepInfo.heading)), 0],
                                     [0, 0, 1]])
             tempVec = np.matmul(tRotation, meshElement)  # Transformed mesh element normal vector
 
@@ -94,13 +92,13 @@ class car:
             # 1. Obtain the axis of rotation
             axis = np.cross(meshElement, np.array([meshElement[0], meshElement[1], 0]))
             # 2. Apply Euler-Rodrigues formula to create transformation matrix
-            tElevation = world_helpers.rotation_matrix(axis, stepInfo.inclination)
+            tElevation = world_helpers.rotation_matrix(axis, np.deg2rad(-stepInfo.inclination))
             # 3. Apply transformation
             meshVec = np.matmul(tElevation, tempVec)
-            # TODO: Test rotated mesh vector
             power += insolation * np.abs(0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
 
-        # power = insolation * self.ARRAY_AREA * self.ARRAY_EFF
+        # Flat panel model; No consideration to array geometry
+        # power = insolation * self.arrayArea * self.ARRAY_EFF
         return power
 
     # Maximum Power Point Tracker consolidating tracking and conversion efficiency
