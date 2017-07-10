@@ -164,7 +164,7 @@ class car:
 
         def f(z):
             return stepInfo.stepDistance-(self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * (-0.5)*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination))))
-        stepInfo.speed = fsolve(f, vPrev)[0]     # The final resulting speed of this step
+        stepInfo.speed = np.ceil(fsolve(f, vPrev)[0] *100)/100    # The final resulting speed of this step
         # some round off error is observed for the above calculation on the order of - 0.01 ms-1
         # This is considered to be insignificant to the overall calculations. However, to compensate for some of the uncertainty,
         # the time calculation below will be rounded up to the nearest second.
@@ -177,7 +177,7 @@ class car:
         #     return self.MASS * v / ((964.54 - 250) - 0.5 * 0.1125 * 1.17 * np.power(v,3) - self.MASS * 9.81 * np.sin(np.deg2rad(stepInfo.inclination)))
         #
         # time = romberg(integrand, vPrev, stepInfo.speed)
-        return np.ceil(time)
+        return np.ceil(time[0])
 
     # -------------------- ELECTROMECHANICAL END ----------------------------------------
     # Misc calculators
