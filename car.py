@@ -152,33 +152,32 @@ class car:
     def calcStepTime(self, stepInfo):
         pshaft = self.motorShaftPower(stepInfo)     # Shaft power delivered by motor
 
-        def f(x):
-            return self.proll(x, stepInfo) + self.pgravity(x, stepInfo) + self.paero(x, stepInfo) - pshaft
-
-        vStepMax = fsolve(f, 22.)   # Maximum speed attainable with the power given in m s-1
+        # def f(x):
+        #     return self.proll(x, stepInfo) + self.pgravity(x, stepInfo) + self.paero(x, stepInfo) - pshaft
+        #
+        # vStepMax = fsolve(f, 22.)   # Maximum speed attainable with the power given in m s-1
         vPrev = stepInfo.speed
 
         def f(y):
             return -0.5 * self.CDA * stepInfo.rho * np.power(y, 3)- self.MASS * y * world_helpers.g*np.sin(np.deg2rad( stepInfo.inclination))+(pshaft - self.proll(y,stepInfo))
-        omega = fsolve(f, 0)[0]
+        omega = fsolve(f, 0)
 
         def f(z):
-            expDist = 0
-            # TODO: Check if the function is monotonic
-            # for omega in omegas:
-            #     expDist += self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * -0.5*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination)))
-            # return expDist
-            return self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * (-0.5)*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination))) - 500
-
+            return stepInfo.stepDistance-(self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * (-0.5)*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination))))
         stepInfo.speed = fsolve(f, vPrev)[0]     # The final resulting speed of this step
+        # some round off error is observed for the above calculation on the order of - 0.01 ms-1
+        # This is considered to be insignificant to the overall calculations. However, to compensate for some of the uncertainty,
+        # the time calculation below will be rounded up to the nearest second.
 
         time = self.MASS*omega * np.log((-omega + stepInfo.speed)/(-omega + vPrev)) / (3*-(0.5)*self.CDA*stepInfo.rho*np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination)))
+
+        # Above conclusion tested with below integration:
         # def integrand(v):
         #     #return self.MASS * v / ((pshaft - self.proll(v, stepInfo))-0.5*self.CDA*stepInfo.rho*np.power(v,3)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination)))
         #     return self.MASS * v / ((964.54 - 250) - 0.5 * 0.1125 * 1.17 * np.power(v,3) - self.MASS * 9.81 * np.sin(np.deg2rad(stepInfo.inclination)))
         #
-        # time = quad(integrand, 21.5, 21.851)
-        return time
+        # time = romberg(integrand, vPrev, stepInfo.speed)
+        return np.ceil(time)
 
     # -------------------- ELECTROMECHANICAL END ----------------------------------------
     # Misc calculators
