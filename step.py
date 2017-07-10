@@ -32,6 +32,7 @@ class step:
     eTime = 0.          # Elapsed race time (hours)
     gTime = 0.          # Global time (UTC format) ie. time on the clocks and watches
     timezone = 0        # Timezone offset from UTC time
+    stepTime = 0.       # Time to traverse this step (s)
 
 
     # Class constructor
@@ -48,13 +49,12 @@ class step:
         self.wind = _wind
 
     # Advance one distance step forward
-    # Uses function from "car" class
+    # Uses function from "car" class to transition the previous step state into new state
+    # Assumes previous step result is already copied into current step data containers
     def advanceStep(self, car):
-        # Copy previous step data to this step
-
+        # Check if boundary conditions: control stop or end of day
 
         # Evaluate power in for this step
-
 
         # Evaluate available power output for this step
 

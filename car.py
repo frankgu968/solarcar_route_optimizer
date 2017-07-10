@@ -150,8 +150,8 @@ class car:
 
     # Calculate how fast the car will drive
     def calcStepTime(self, stepInfo):
-        pshaft = self.motorShaftPower(stepInfo)     # Shaft power delivered by motor
-
+        #pshaft = self.motorShaftPower(stepInfo)     # Shaft power delivered by motor
+        pshaft = 1300
         # def f(x):
         #     return self.proll(x, stepInfo) + self.pgravity(x, stepInfo) + self.paero(x, stepInfo) - pshaft
         #
@@ -164,20 +164,22 @@ class car:
 
         def f(z):
             return stepInfo.stepDistance-(self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * (-0.5)*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination))))
-        stepInfo.speed = np.ceil(fsolve(f, vPrev)[0] *100)/100    # The final resulting speed of this step
-        # some round off error is observed for the above calculation on the order of - 0.01 ms-1
-        # This is considered to be insignificant to the overall calculations. However, to compensate for some of the uncertainty,
-        # the time calculation below will be rounded up to the nearest second.
+        stepInfo.speed = fsolve(f, vPrev)[0]     # The final resulting speed of this step
 
-        time = self.MASS*omega * np.log((-omega + stepInfo.speed)/(-omega + vPrev)) / (3*-(0.5)*self.CDA*stepInfo.rho*np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination)))
+        # Not sure how to calculate the time... Will take the mid point between the speeds and approximate it...
+        stepInfo.stepTime = stepInfo.stepDistance / ((vPrev+stepInfo.speed) / 2)
 
-        # Above conclusion tested with below integration:
-        # def integrand(v):
-        #     #return self.MASS * v / ((pshaft - self.proll(v, stepInfo))-0.5*self.CDA*stepInfo.rho*np.power(v,3)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination)))
-        #     return self.MASS * v / ((964.54 - 250) - 0.5 * 0.1125 * 1.17 * np.power(v,3) - self.MASS * 9.81 * np.sin(np.deg2rad(stepInfo.inclination)))
+        # # START INVALID TIME
+        # time = self.MASS*omega * np.log((-omega + stepInfo.speed)/(-omega + vPrev)) / (3*-(0.5)*self.CDA*stepInfo.rho*np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination)))
         #
-        # time = romberg(integrand, vPrev, stepInfo.speed)
-        return np.ceil(time[0])
+        # # Above conclusion tested with below integration:
+        # def integrand(v):
+        #     return self.MASS * v / ((pshaft - self.proll(v, stepInfo))-0.5*self.CDA*stepInfo.rho*np.power(v,3)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination)))
+        #     #return self.MASS * v / ((964.54 - 250) - 0.5 * 0.1125 * 1.17 * np.power(v,3) - self.MASS * 9.81 * np.sin(np.deg2rad(stepInfo.inclination)))
+        #
+        # time = quad(integrand, vPrev, stepInfo.speed)
+        # # END INVALID TIME
+        return stepInfo.stepTime
 
     # -------------------- ELECTROMECHANICAL END ----------------------------------------
     # Misc calculators
