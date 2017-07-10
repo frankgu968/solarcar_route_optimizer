@@ -4,19 +4,33 @@
 # Date: July 2nd, 2017
 import numpy as np
 
+from scipy.optimize import fsolve
+
 import sun
 import world_helpers
 
 
 class car:
-    ELEC_LP_POWER = 15.  # Electrical low-power system power = 15 W
+    # Static efficiency blobs
+    ELEC_LP_POWER = 15. # Electrical low-power system power = 15 W
+    MPPT_EFF = 0.97     # Average MPPT efficiency (97%)
+    BAT_EFF = 0.85      # Battery Coulombic efficiency
+    ARRAY_EFF = 0.243   # Solar panel nominal efficiency (24.3%)
+    MOT_EFF = 0.95      # Motor efficiency (95%)
+
+    # Car dependent parameters
+    CDA = 0.1125           # Coefficient of Drag
+    Ptire = 517e3       # Tire pressure (~75 psi)
+#    alpha
+#    beta =
+    MASS = 250.         # Solar car mass (250 Kg)
+
+    # Dynamic variables
     arrayArea = 0.  # Area of the solar array (m2)
-    ARRAY_EFF = 0.237  # Solar panel nominal efficiency (24.3%)
-    MPPT_EFF = 0.97  # Average MPPT efficiency (97%)
-    BAT_EFF = 0.85  # Battery Coulombic efficiency
     arrayGeometry = []  # Array geometry
 
     # -------------------- ARRAY START --------------------------------------------------
+    # ELEMENT: ARRAY_GEOMETRY
     # Load array geometry file
     def loadArray(self, fname):
         mode = 0  # File parsing mode (0-Pass, 1-Node, 2-Elements)
@@ -67,6 +81,7 @@ class car:
                     mode = 2
         return lines
 
+    # ELEMENT: ARRAY
     # Raw expected array input
     # Includes array geometry and temperature effects
     # Assumes array temperature = ambient (due to high speed free stream air)
@@ -98,9 +113,10 @@ class car:
             power += insolation * np.abs(0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
 
         # Flat panel model; No consideration to array geometry
-        # power = insolation * self.arrayArea * self.ARRAY_EFF
+        #power = insolation * self.arrayArea * self.ARRAY_EFF * np.sin(np.deg2rad(sunInfo[0]))
         return power
 
+    # ELEMENT: MPPT
     # Maximum Power Point Tracker consolidating tracking and conversion efficiency
     def arrayOut(self, stepInfo):
         arrRaw = self.arrayIn(stepInfo)
@@ -110,6 +126,7 @@ class car:
     # -------------------- ARRAY END ----------------------------------------------------
 
     # -------------------- BATTERY START ------------------------------------------------
+    # ELEMENT: BATTERY
     # Battery output power and its effects on the battery SoC
     def battOut(self, stepInfo):
         powerBat = stepInfo.pbattExp * self.BAT_EFF
@@ -117,14 +134,63 @@ class car:
 
     # -------------------- BATTERY END --------------------------------------------------
 
+    # -------------------- TELEMETRY START ----------------------------------------------
+    # ELEMENT: TELEMETRY
+    def telemPower(self, stepInfo):
+        return self.ELEC_LP_POWER
+    # -------------------- TELEMETRY END ------------------------------------------------
+
     # -------------------- ELECTROMECHANICAL START --------------------------------------
     # Calculates how much thurst on the wheels the motor will provide (N) given the power in
-    def motorForce():
-
-        return
+    # Calling this will set the pout field of StepInfo
+    def motorShaftPower(self, stepInfo):
+        stepInfo.pout = self.arrayOut(stepInfo) + self.battOut(stepInfo)  # Power available for consumption
+        pshaft = (stepInfo.pout - self.telemPower(stepInfo)) * self.MOT_EFF
+        return pshaft
 
     # Calculate how fast the car will drive
-    def calcSpeed():
+    def calcStepTime(self, stepInfo):
+        pshaft = self.motorShaftPower(stepInfo)     # Shaft power delivered by motor
 
-        return
-        # -------------------- ELECTROMECHANICAL END ----------------------------------------
+        def f(x):
+            return self.proll(x, stepInfo) + self.pgravity(x, stepInfo) + self.paero(x, stepInfo) - pshaft
+
+        vStepMax = fsolve(f, 22.)   # Maximum speed attainable with the power given in m s-1
+        vPrev = stepInfo.speed
+
+        def f(y):
+            return -0.5 * self.CDA * stepInfo.rho * np.power(y, 3)- self.MASS * y * world_helpers.g*np.sin(np.deg2rad( stepInfo.inclination))+(pshaft - self.proll(y,stepInfo))
+        omega = fsolve(f, 0)[0]
+
+        def f(z):
+            expDist = 0
+            # TODO: Check if the function is monotonic
+            # for omega in omegas:
+            #     expDist += self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * -0.5*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination)))
+            # return expDist
+            return self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * (-0.5)*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination))) - 500
+
+        stepInfo.speed = fsolve(f, vPrev)[0]     # The final resulting speed of this step
+
+        time = self.MASS*omega * np.log((-omega + stepInfo.speed)/(-omega + vPrev)) / (3*-(0.5)*self.CDA*stepInfo.rho*np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination)))
+        # def integrand(v):
+        #     #return self.MASS * v / ((pshaft - self.proll(v, stepInfo))-0.5*self.CDA*stepInfo.rho*np.power(v,3)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination)))
+        #     return self.MASS * v / ((964.54 - 250) - 0.5 * 0.1125 * 1.17 * np.power(v,3) - self.MASS * 9.81 * np.sin(np.deg2rad(stepInfo.inclination)))
+        #
+        # time = quad(integrand, 21.5, 21.851)
+        return time
+
+    # -------------------- ELECTROMECHANICAL END ----------------------------------------
+    # Misc calculators
+    # ELEMENT: TIRE
+    def proll(self, v, stepInfo):
+        return 250
+
+    # ELEMENT: AERO
+    def paero(self, v, stepInfo):
+        return 0.5 * self.CDA * stepInfo.rho * np.power(v, 3)
+
+    # ELEMENT: GRAVITY
+    def pgravity(self, v, stepInfo):
+        return self.MASS * world_helpers.g * np.sin(np.deg2rad(stepInfo.inclination)) * v
+

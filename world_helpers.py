@@ -2,6 +2,7 @@
 import math
 import numpy as np
 
+g = 9.81 # Gravitational acceleration constant
 
 # Euler-Rodrigues formula for rotation in 3D in an axis
 def rotation_matrix(axis, theta):

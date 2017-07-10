@@ -16,6 +16,7 @@ class step:
     heading = 0.        # Compass heading (0 deg -> N)
     cloud = 0.          # "Cloud factor"
     wind = [0., 0.]     # Wind [speed (kph), heading (deg 0->N)]
+    rho = 1.17          # Local air density (kg m-3)
 
     # Car states    (populated during step advance)
     speed = 0.          # Speed of step (kph)
@@ -25,7 +26,7 @@ class step:
     pbatt = 0.          # Battery power (W)
     battSoC = 0.        # Battery state of charge (%)
     pout = 0.           # OPTIMIZATION PARAMETER: Power consumed (W) ie. power profile to run (GA candidates)
-    pbattExp = 0.       # OPTIMIZATION PARAMETER: Prescribed battery power (W) ie. battery discharge profile (Init with profile)
+    pbattExp = 0.       # OPTIMIZATION PARAMETER II: Prescribed battery power (W) ie. battery discharge profile (Init with profile)
 
     # Optimizer states (populated during step advance)
     eTime = 0.          # Elapsed race time (hours)
@@ -48,7 +49,10 @@ class step:
 
     # Advance one distance step forward
     # Uses function from "car" class
-    def advanceStep(self):
+    def advanceStep(self, car):
+        # Copy previous step data to this step
+
+
         # Evaluate power in for this step
 
 
