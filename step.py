@@ -17,7 +17,7 @@ class step:
     heading = 0.            # Compass heading (0 deg -> N)
     cloud = 0.              # "Cloud factor"
     wind = [0., 0.]         # Wind [speed (kph), heading (deg 0->N)]
-    rho = 1.17              # Local air density (kg m-3)
+    rho = 1.11              # Local air density (kg m-3)
 
     # Car states    (populated during step advance)
     speed = 0.          # Speed of step (kph)
