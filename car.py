@@ -8,7 +8,7 @@ from scipy.optimize import fsolve
 
 import sun
 import world_helpers
-
+import world
 
 class car:
     # Static efficiency blobs
@@ -159,11 +159,11 @@ class car:
         vPrev = stepInfo.speed
 
         def f(y):
-            return -0.5 * self.CDA * stepInfo.rho * np.power(y, 3)- self.MASS * y * world_helpers.g*np.sin(np.deg2rad( stepInfo.inclination))+(pshaft - self.proll(y,stepInfo))
+            return -0.5 * self.CDA * stepInfo.rho * np.power(y, 3)- self.MASS * y * world.g*np.sin(np.deg2rad( stepInfo.inclination))+(pshaft - self.proll(y,stepInfo))
         omega = fsolve(f, 0)
 
         def f(z):
-            return stepInfo.stepDistance-(self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * (-0.5)*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination))))
+            return stepInfo.stepDistance-(self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * (-0.5)*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world.g*np.sin(np.deg2rad(stepInfo.inclination))))
         stepInfo.speed = fsolve(f, vPrev)[0]     # The final resulting speed of this step
 
         # Not sure how to calculate the time... Will take the mid point between the speeds and approximate it...

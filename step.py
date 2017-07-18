@@ -6,22 +6,23 @@
 class step:
     # These parameters represent the state of the system at the END of a step traversed
     # Environment states (populated during environment init)
-    stepNum = 0.        # Step number
-    ambTemp = 0.        # Ambient temperature (C)
-    location = [0., 0.] # GPS [Lat, Long]
-    stepDistance = 0.   # Length of the step (km)
-    isControlStop = False # Control stop flag
-    isEndOfDay = False    # OPTIMIZATION PARAMETER: End of day flag (ie. when to stop the car)
-    inclination = 0.    # Inclination of the car (deg)
-    heading = 0.        # Compass heading (0 deg -> N)
-    cloud = 0.          # "Cloud factor"
-    wind = [0., 0.]     # Wind [speed (kph), heading (deg 0->N)]
-    rho = 1.17          # Local air density (kg m-3)
+    stepNum = 0.            # Step number
+    ambTemp = 0.            # Ambient temperature (C)
+    location = [0., 0.]     # GPS [Lat, Long]
+    stepDistance = 0.       # Length of the step (km)
+    trip = 0.               # Distance traversed (km)
+    isControlStop = False   # Control stop flag
+    isEndOfDay = False      # OPTIMIZATION PARAMETER: End of day flag (ie. when to stop the car)
+    inclination = 0.        # Inclination of the car (deg)
+    heading = 0.            # Compass heading (0 deg -> N)
+    cloud = 0.              # "Cloud factor"
+    wind = [0., 0.]         # Wind [speed (kph), heading (deg 0->N)]
+    rho = 1.17              # Local air density (kg m-3)
 
     # Car states    (populated during step advance)
     speed = 0.          # Speed of step (kph)
     isRegen = 0.        # Regenerative braking flag
-    trip = 0.           # Distance traversed (km)
+
     pin = 0.            # Input power (W)
     pbatt = 0.          # Battery power (W)
     battSoC = 0.        # Battery state of charge (%)

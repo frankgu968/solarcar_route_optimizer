@@ -16,7 +16,6 @@ def main():
     #fname = raw_input('Please specify geometry file location: ')
     fname = '/home/frank/Desktop/test.msh'
     sc.loadArray(fname)
-    #print(sc.arrayArea)
     dt = datetime(2015, 10, 18, 11, 00)
     stp.gTime = dt
     stp.pbattExp = 200
