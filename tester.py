@@ -1,14 +1,27 @@
 # I use this file for tests; don't mind it...
 # Author: Frank Gu
 # Date: July 1st, 2017
+# Dependencies: NumPy, ElementTree
 
+import xml.etree.ElementTree as ET
 from datetime import datetime
 
 import car
 import step
+import world
 
 
 def main():
+    tree = ET.parse('./Data/waypoints_small.gpx')
+    root = tree.getroot()
+    # for index, child in enumerate(root):
+    #     print index
+    #     print child[0].text             # Elevation
+    #     print child.attrib.get('lat')   # Latitude
+    #     print child.attrib.get('lon')   # Longitude
+
+    world.preprocessWorld('./Data/waypoints_small.gpx', {})
+
     stp = step.step(1, 35, [-12.462827, 130.841782], 500.0, 0., 135., 0., [0.,0.])
 
     stp.timezone = 9.5
