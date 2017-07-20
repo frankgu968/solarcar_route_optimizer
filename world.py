@@ -4,20 +4,26 @@
 import numpy as np
 import xml.etree.ElementTree as ET
 
+import car
 import step
 from world_helpers import haversine
 
 g = 9.81  # Gravitational acceleration constant
 steps = []  # Steps container
-SL_CONTROL_STOP = 60.  # Control stop speed limit
-SL_HIGHWAY = 130.  # Highway speed limit
+solarCar = {}   # Solar car container
+SL_CONTROL_STOP = 16.67  # Control stop speed limit (ms-1)
+SL_HIGHWAY = 36.1  # Highway speed limit (ms-1)
 
 # DEBUG FACILITIES
 DEBUG_AVG_WIND_SPD = 0.
 DEBUG_AVG_WIND_VAR = 4
 
 
-def importWorld(filename):
+def importWorld(fn_array, fn_route):
+    global solarCar
+    solarCar = car.car()
+    solarCar.loadArray(fn_array)
+
     return
 
 
@@ -175,3 +181,17 @@ def loadDebugData(input):
         steps.append(tempStep)
         stepNum = stepNum + 1
     return
+
+def simulate(pbatt_candidate):
+    for index, stp in enumerate(steps):
+        stp.pbatt = 490.
+        stp.advanceStep(solarCar)
+        print index
+        print stp.eTime
+        print stp.speed
+
+        # Copy state variables
+        if index < len(steps) - 1:
+            steps[index+1].eTime = stp.eTime
+            steps[index+1].gTime = stp.gTime
+            steps[index+1].speed = stp.speed

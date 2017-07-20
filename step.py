@@ -3,6 +3,8 @@
 # Author: Frank Gu
 # Date: July 2nd, 2017
 
+from datetime import timedelta
+
 class step:
     # These parameters represent the state of the system at the END of a step traversed
     # Environment states (populated during environment init)
@@ -55,17 +57,14 @@ class step:
     # Uses function from "car" class to transition the previous step state into new state
     # Assumes previous step result is already copied into current step data containers
     def advanceStep(self, car):
-        # Check if boundary conditions: control stop or end of day
+        # Evaluate car's step performance
+        car.calcStepTime(self)
 
-        # Evaluate power in for this step
+        # Advance elapsed time
+        self.eTime = self.eTime + self.stepTime
 
-        # Evaluate available power output for this step
-
-
-        # Evaluate average speed to traverse this step
-
-
-        # Evaluate time taken
+        # Advance global time
+        self.gTime = self.gTime + timedelta(seconds=self.stepTime)
         return
 
     # Checks step advancement results against presets

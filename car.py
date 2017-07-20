@@ -89,35 +89,39 @@ class car:
     def arrayIn(self, stepInfo):
         sunInfo = sun.info(stepInfo.gTime, stepInfo.timezone, stepInfo.location)
         insolation = sun.irradiance(sunInfo)  # The amount of power hitting the surface of the Earth
-        power = 0.
 
-        # Create the sun's unit vector with Azimuth and elevation
-        sunVec = -np.array([np.sin(np.deg2rad(sunInfo[1])) * np.cos(np.deg2rad(sunInfo[0])),
-                           np.cos(np.deg2rad(sunInfo[1])) * np.sin(np.deg2rad(sunInfo[0])),
-                           np.sin(np.deg2rad(sunInfo[0]))])
+        # # Create the sun's unit vector with Azimuth and elevation
+        # sunVec = -np.array([np.sin(np.deg2rad(sunInfo[1])) * np.cos(np.deg2rad(sunInfo[0])),
+        #                    np.cos(np.deg2rad(sunInfo[1])) * np.sin(np.deg2rad(sunInfo[0])),
+        #                    np.sin(np.deg2rad(sunInfo[0]))])
 
-        for meshElement in self.arrayGeometry:
-            # Rotate the car in 3D with heading and elevation
-            # Rotate the car's heading
-            tRotation = np.array([  [np.cos(np.deg2rad(-stepInfo.heading)), -np.sin(-np.deg2rad(stepInfo.heading)), 0],
-                                    [np.sin(np.deg2rad(-stepInfo.heading)), np.cos(-np.deg2rad(stepInfo.heading)), 0],
-                                    [0, 0, 1]])
-            tempVec = np.matmul(tRotation, meshElement)  # Transformed mesh element normal vector
-
-            # Rotate the car's inclination
-            # 1. Obtain the axis of rotation
-            axis = np.cross(meshElement, np.array([meshElement[0], meshElement[1], 0]))
-            # 2. Apply Euler-Rodrigues formula to create transformation matrix
-            tElevation = world_helpers.rotation_matrix(axis, np.deg2rad(-stepInfo.inclination))
-            # 3. Apply transformation
-            meshVec = np.matmul(tElevation, tempVec)
-            power += insolation * np.abs(0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
+        # FIXME: Array mesh simulation seems to take a VERY long time; find a way to optimize this!
+        # for meshElement in self.arrayGeometry:
+        #     # Rotate the car in 3D with heading and elevation
+        #     # Rotate the car's heading
+        #     tRotation = np.array([  [np.cos(np.deg2rad(-stepInfo.heading)), -np.sin(-np.deg2rad(stepInfo.heading)), 0],
+        #                             [np.sin(np.deg2rad(-stepInfo.heading)), np.cos(-np.deg2rad(stepInfo.heading)), 0],
+        #                             [0, 0, 1]])
+        #     tempVec = np.matmul(tRotation, meshElement)  # Transformed mesh element normal vector
+        #
+        #     # Rotate the car's inclination
+        #     # 1. Obtain the axis of rotation
+        #     axis = np.cross(meshElement, np.array([meshElement[0], meshElement[1], 0]))
+        #     # 2. Apply Euler-Rodrigues formula to create transformation matrix
+        #     tElevation = world_helpers.rotation_matrix(axis, np.deg2rad(-stepInfo.inclination))
+        #     # 3. Apply transformation
+        #     meshVec = np.matmul(tElevation, tempVec)
+        #     unitPower = insolation * (0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
+        #
+        #     if(unitPower > 0):
+        #         power += unitPower
 
         # TODO: Implement temperature effects on panel efficiency
         # TODO: Implement cloud coverage effects
 
         # Flat panel model; No consideration to array geometry
-        #power = insolation * self.arrayArea * self.ARRAY_EFF * np.sin(np.deg2rad(sunInfo[0]))
+        power = insolation * self.arrayArea * self.ARRAY_EFF * np.sin(np.deg2rad(sunInfo[0]))
+        stepInfo.pin = power
         return power
 
     # ELEMENT: MPPT
@@ -133,7 +137,7 @@ class car:
     # ELEMENT: BATTERY
     # Battery output power and its effects on the battery SoC
     def battOut(self, stepInfo):
-        powerBat = stepInfo.pbattExp * self.BAT_EFF
+        powerBat = stepInfo.pbatt * self.BAT_EFF
         return powerBat
 
     # -------------------- BATTERY END --------------------------------------------------
@@ -154,8 +158,7 @@ class car:
 
     # Calculate how fast the car will drive
     def calcStepTime(self, stepInfo):
-        #pshaft = self.motorShaftPower(stepInfo)     # Shaft power delivered by motor
-        pshaft = 1300
+        pshaft = self.motorShaftPower(stepInfo)     # Shaft power delivered by motor
         # def f(x):
         #     return self.proll(x, stepInfo) + self.pgravity(x, stepInfo) + self.paero(x, stepInfo) - pshaft
         #
