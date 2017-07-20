@@ -11,13 +11,13 @@ class step:
     location = [0., 0.]     # GPS [Lat, Long]
     stepDistance = 0.       # Length of the step (km)
     trip = 0.               # Distance traversed (km)
-    isControlStop = False   # Control stop flag
-    isEndOfDay = False      # OPTIMIZATION PARAMETER: End of day flag (ie. when to stop the car)
+    stepType = 0            # 0 - Ordinary step; 1 - Control stop; 2 - End of day / beginning of day transition
     inclination = 0.        # Inclination of the car (deg)
     heading = 0.            # Compass heading (0 deg -> N)
     cloud = 0.              # "Cloud factor"
     wind = [0., 0.]         # Wind [speed (kph), heading (deg 0->N)]
     rho = 1.11              # Local air density (kg m-3)
+    speedLimit = 0.         # Step speed limit (km/h)
 
     # Car states    (populated during step advance)
     speed = 0.          # Speed of step (kph)
@@ -37,17 +37,19 @@ class step:
 
 
     # Class constructor
-    def __init__(self, _stepNum, _ambTemp, _location, _stepDist, _inclination, _heading, _cloud, _wind):
+    def __init__(self, _stepNum, _ambTemp, _location, _stepDist, _trip, _speedLimit, _inclination, _heading, _cloud, _wind, _stepType, _timezone):
         self.stepNum = _stepNum
         self.ambTemp = _ambTemp
         self.location = _location
         self.stepDistance = _stepDist
+        self.trip = _trip
+        self.speedLimit = _speedLimit
         self.inclination = _inclination
-        self.isControlStop = False
-        self.isEndOfDay = False
         self.heading = _heading
         self.cloud = _cloud
         self.wind = _wind
+        self.stepType = _stepType
+        self.timezone = _timezone
 
     # Advance one distance step forward
     # Uses function from "car" class to transition the previous step state into new state

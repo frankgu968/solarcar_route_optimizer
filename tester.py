@@ -20,9 +20,11 @@ def main():
     #     print child.attrib.get('lat')   # Latitude
     #     print child.attrib.get('lon')   # Longitude
 
-    world.preprocessWorld('./Data/waypoints_small.gpx', {})
+    world.preprocessWorld('./Data/waypoints.gpx', [20, 50])
+    world.preprocessDebugWorld('./Data/WSC.route')
+    world.loadDebugData('./Data/WSC.debug')
+    stp = step.step(1, 35, [-12.462827, 130.841782], 500.0, 1500., 130.,  0., 135., 0., [0.,0.], 0, 0.)
 
-    stp = step.step(1, 35, [-12.462827, 130.841782], 500.0, 0., 135., 0., [0.,0.])
 
     stp.timezone = 9.5
     sc = car.car()
