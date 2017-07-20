@@ -7,8 +7,9 @@ import numpy as np
 from scipy.optimize import fsolve
 
 import sun
-import world_helpers
 import world
+import world_helpers
+
 
 class car:
     # Static efficiency blobs
@@ -112,6 +113,9 @@ class car:
             meshVec = np.matmul(tElevation, tempVec)
             power += insolation * np.abs(0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
 
+        # TODO: Implement temperature effects on panel efficiency
+        # TODO: Implement cloud coverage effects
+
         # Flat panel model; No consideration to array geometry
         #power = insolation * self.arrayArea * self.ARRAY_EFF * np.sin(np.deg2rad(sunInfo[0]))
         return power
@@ -159,16 +163,19 @@ class car:
         vPrev = stepInfo.speed
 
         def f(y):
-            return -0.5 * self.CDA * stepInfo.rho * np.power(y, 3)- self.MASS * y * world.g*np.sin(np.deg2rad( stepInfo.inclination))+(pshaft - self.proll(y,stepInfo))
+            return -0.5 * self.CDA * stepInfo.rho * np.power(y, 3)- self.MASS * y * world.g*np.sin(np.deg2rad(stepInfo.inclination))+(pshaft - self.proll(y,stepInfo))
         omega = fsolve(f, 0)
 
         def f(z):
             return stepInfo.stepDistance-(self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * (-0.5)*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world.g*np.sin(np.deg2rad(stepInfo.inclination))))
-        stepInfo.speed = fsolve(f, vPrev)[0]     # The final resulting speed of this step
+        airspeed = fsolve(f, vPrev)[0]  # The final resulting air speed of this step
+        # ASSUMPTION: Only component of wind in direction of car travel affects the car; cross wind does not introduce any drag
+        stepInfo.speed = airspeed + stepInfo.wind[0] * np.sin(np.deg2rad(90 - np.abs(stepInfo.wind[1] - stepInfo.heading)))  # Calculate ground speed
 
         # Not sure how to calculate the time... Will take the mid point between the speeds and approximate it...
         stepInfo.stepTime = stepInfo.stepDistance / ((vPrev+stepInfo.speed) / 2)
 
+        # FIXME
         # # START INVALID TIME
         # time = self.MASS*omega * np.log((-omega + stepInfo.speed)/(-omega + vPrev)) / (3*-(0.5)*self.CDA*stepInfo.rho*np.power(omega,2)-self.MASS*world_helpers.g*np.sin(np.deg2rad(stepInfo.inclination)))
         #
