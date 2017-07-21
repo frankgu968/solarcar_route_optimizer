@@ -57,6 +57,10 @@ class step:
     # Uses function from "car" class to transition the previous step state into new state
     # Assumes previous step result is already copied into current step data containers
     def advanceStep(self, car):
+        # Check for the step properties
+        # TODO: Implement control stop logic
+        # TODO: Implement end-of-day / beginning-of-day logic
+
         # Evaluate car's step performance
         car.calcStepTime(self)
 
@@ -81,4 +85,13 @@ class step:
 
         return
 
-
+    # Clears the non-step dependent information
+    def clean(self):
+        self.pbatt = 0.
+        self.eTime = 0.
+        self.stepTime = 0.
+        self.gTime = {}
+        self.speed = 0.
+        self.pout = 0.
+        self.battSoC = 0.
+        self.pin = 0.

@@ -1,5 +1,4 @@
 import numpy as np
-from datetime import datetime  # DEBUG
 
 from deap import algorithms
 from deap import base
@@ -8,7 +7,7 @@ from deap import tools
 
 import world
 
-creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
+creator.create("FitnessMin", base.Fitness, weights=(-1.0,))     # Minimize the fitness function
 creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
 
 toolbox = base.Toolbox()
@@ -19,13 +18,15 @@ toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 
 def evalOneMax(individual):
-    # FIXME: Quick and dirty way of resetting step data; Find a better way of doing this!!!
-    world.loadDebugData('./Data/WSC.debug')
-    dt = datetime(2017, 10, 8, 13, 00)
-    world.steps[0].gTime = dt
-    world.steps[0].speed = 21.
-    fitness = world.simulate(individual)
+    # Clear the state transitions of the previous individual
+    for stp in world.steps:
+        stp.clean()
 
+    # Reset the initial conditions
+    world.setInitialConditions()
+
+    # TODO: Implement cost function with all the mathematical constraints
+    fitness = world.simulate(individual)
     return fitness,
 
 
@@ -66,7 +67,7 @@ toolbox.register("select", tools.selTournament, tournsize=3)
 
 def optimize():
 
-    pop = toolbox.population(n=300)
+    pop = toolbox.population(n=10)
 
     # Numpy equality function (operators.eq) between two arrays returns the
     # equality element wise, which raises an exception in the if similar()

@@ -3,6 +3,7 @@
 
 import numpy as np
 import xml.etree.ElementTree as ET
+from datetime import datetime
 
 import car
 import step
@@ -185,6 +186,14 @@ def loadDebugData(input):
     return
 
 
+# Set the starting conditions of the race (date, time, speed etc.)
+def setInitialConditions():
+    dt = datetime(2017, 10, 8, 13, 00)
+    steps[0].gTime = dt
+
+    steps[0].speed = 21.    # DEBUG
+
+# Simulate the car driving the entire course of the race route with a battery power profile candidate as input
 def simulate(pbatt_candidate):
     global solarCar
 
