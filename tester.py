@@ -11,7 +11,7 @@ import world
 
 def main():
     # fname = raw_input('Please specify geometry file location: ')
-    fname = '/home/frank/Desktop/test.msh'
+    fname = './Data/array.msh'
     # world.preprocessWorld('./Data/waypoints.gpx', [20, 50])
     # world.preprocessDebugWorld('./Data/WSC.route')
     world.loadDebugData('./Data/WSC.debug')
