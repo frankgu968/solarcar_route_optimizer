@@ -89,38 +89,39 @@ class car:
     def arrayIn(self, stepInfo):
         sunInfo = sun.info(stepInfo.gTime, stepInfo.timezone, stepInfo.location)
         insolation = sun.irradiance(sunInfo)  # The amount of power hitting the surface of the Earth
+        power = 0.
 
-        # # Create the sun's unit vector with Azimuth and elevation
-        # sunVec = -np.array([np.sin(np.deg2rad(sunInfo[1])) * np.cos(np.deg2rad(sunInfo[0])),
-        #                    np.cos(np.deg2rad(sunInfo[1])) * np.sin(np.deg2rad(sunInfo[0])),
-        #                    np.sin(np.deg2rad(sunInfo[0]))])
+        # Create the sun's unit vector with Azimuth and elevation
+        sunVec = -np.array([np.sin(np.deg2rad(sunInfo[1])) * np.cos(np.deg2rad(sunInfo[0])),
+                           np.cos(np.deg2rad(sunInfo[1])) * np.sin(np.deg2rad(sunInfo[0])),
+                           np.sin(np.deg2rad(sunInfo[0]))])
 
         # FIXME: Array mesh simulation seems to take a VERY long time; find a way to optimize this!
-        # for meshElement in self.arrayGeometry:
-        #     # Rotate the car in 3D with heading and elevation
-        #     # Rotate the car's heading
-        #     tRotation = np.array([  [np.cos(np.deg2rad(-stepInfo.heading)), -np.sin(-np.deg2rad(stepInfo.heading)), 0],
-        #                             [np.sin(np.deg2rad(-stepInfo.heading)), np.cos(-np.deg2rad(stepInfo.heading)), 0],
-        #                             [0, 0, 1]])
-        #     tempVec = np.matmul(tRotation, meshElement)  # Transformed mesh element normal vector
-        #
-        #     # Rotate the car's inclination
-        #     # 1. Obtain the axis of rotation
-        #     axis = np.cross(meshElement, np.array([meshElement[0], meshElement[1], 0]))
-        #     # 2. Apply Euler-Rodrigues formula to create transformation matrix
-        #     tElevation = world_helpers.rotation_matrix(axis, np.deg2rad(-stepInfo.inclination))
-        #     # 3. Apply transformation
-        #     meshVec = np.matmul(tElevation, tempVec)
-        #     unitPower = insolation * (0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
-        #
-        #     if(unitPower > 0):
-        #         power += unitPower
+        for meshElement in self.arrayGeometry:
+            # Rotate the car in 3D with heading and elevation
+            # Rotate the car's heading
+            tRotation = np.array([  [np.cos(np.deg2rad(-stepInfo.heading)), -np.sin(-np.deg2rad(stepInfo.heading)), 0],
+                                    [np.sin(np.deg2rad(-stepInfo.heading)), np.cos(-np.deg2rad(stepInfo.heading)), 0],
+                                    [0, 0, 1]])
+            tempVec = np.matmul(tRotation, meshElement)  # Transformed mesh element normal vector
+
+            # Rotate the car's inclination
+            # 1. Obtain the axis of rotation
+            axis = np.cross(meshElement, np.array([meshElement[0], meshElement[1], 0]))
+            # 2. Apply Euler-Rodrigues formula to create transformation matrix
+            tElevation = world_helpers.rotation_matrix(axis, np.deg2rad(-stepInfo.inclination))
+            # 3. Apply transformation
+            meshVec = np.matmul(tElevation, tempVec)
+            unitPower = insolation * (0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
+
+            if(unitPower > 0):
+                power += unitPower
 
         # TODO: Implement temperature effects on panel efficiency
         # TODO: Implement cloud coverage effects
 
         # Flat panel model; No consideration to array geometry
-        power = insolation * self.arrayArea * self.ARRAY_EFF * np.sin(np.deg2rad(sunInfo[0]))
+        # power = insolation * self.arrayArea * self.ARRAY_EFF * np.sin(np.deg2rad(sunInfo[0]))
         stepInfo.pin = power
         return power
 
@@ -167,7 +168,7 @@ class car:
 
         def f(y):
             return -0.5 * self.CDA * stepInfo.rho * np.power(y, 3)- self.MASS * y * world.g*np.sin(np.deg2rad(stepInfo.inclination))+(pshaft - self.proll(y,stepInfo))
-        omega = fsolve(f, 0)
+        omega = fsolve(f, 20)
 
         def f(z):
             return stepInfo.stepDistance-(self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * (-0.5)*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world.g*np.sin(np.deg2rad(stepInfo.inclination))))
