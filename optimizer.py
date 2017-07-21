@@ -1,4 +1,5 @@
 import numpy as np
+from datetime import datetime  # DEBUG
 
 from deap import algorithms
 from deap import base
@@ -18,9 +19,13 @@ toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 
 def evalOneMax(individual):
+    # FIXME: Quick and dirty way of resetting step data; Find a better way of doing this!!!
     world.loadDebugData('./Data/WSC.debug')
-    fitness = world.evaluateSolution(individual)
-    print fitness
+    dt = datetime(2017, 10, 8, 13, 00)
+    world.steps[0].gTime = dt
+    world.steps[0].speed = 21.
+    fitness = world.simulate(individual)
+
     return fitness,
 
 
@@ -61,13 +66,13 @@ toolbox.register("select", tools.selTournament, tournsize=3)
 
 def optimize():
 
-    pop = toolbox.population(n=10)
+    pop = toolbox.population(n=300)
 
     # Numpy equality function (operators.eq) between two arrays returns the
     # equality element wise, which raises an exception in the if similar()
     # check of the hall of fame. Using a different equality function like
     # numpy.array_equal or numpy.allclose solve this issue.
-    hof = tools.HallOfFame(1, similar=np.array_equal)
+    hof = tools.HallOfFame(1, similar=np.allclose)
 
     stats = tools.Statistics(lambda ind: ind.fitness.values)
     stats.register("avg", np.mean)
@@ -75,7 +80,7 @@ def optimize():
     stats.register("min", np.min)
     stats.register("max", np.max)
 
-    algorithms.eaSimple(pop, toolbox, cxpb=0.1, mutpb=0.8, ngen=100, stats=stats,
+    algorithms.eaSimple(pop, toolbox, cxpb=0.5, mutpb=0.2, ngen=100, stats=stats,
                         halloffame=hof)
 
     return pop, stats, hof

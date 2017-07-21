@@ -5,6 +5,7 @@
 
 from datetime import datetime
 
+import optimizer
 import world
 
 
@@ -14,11 +15,13 @@ def main():
     # world.preprocessWorld('./Data/waypoints.gpx', [20, 50])
     # world.preprocessDebugWorld('./Data/WSC.route')
     world.loadDebugData('./Data/WSC.debug')
-    # world.importWorld(fname,'')
+    world.importWorld(fname,'')
     dt = datetime(2017, 10, 8, 13, 00)
     world.steps[0].gTime = dt
     world.steps[0].speed = 21.
-    world.simulate({})
+    #world.simulate({})
+
+    optimizer.optimize()
 
     return
 

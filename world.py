@@ -10,7 +10,7 @@ from world_helpers import haversine
 
 g = 9.81  # Gravitational acceleration constant
 steps = []  # Steps container
-solarCar = {}   # Solar car container
+solarCar = {}  # Solar car container
 SL_CONTROL_STOP = 16.67  # Control stop speed limit (ms-1)
 SL_HIGHWAY = 36.1  # Highway speed limit (ms-1)
 
@@ -87,7 +87,7 @@ def preprocessWorld(input, controlStops):
                 if processedRoot[index - 2].attrib.get('stepType') == '1':
                     speedLimit = SL_CONTROL_STOP
 
-                if (csIndex < len(controlStops)) and (trip > controlStops[csIndex]*1000. > prevTrip):
+                if (csIndex < len(controlStops)) and (trip > controlStops[csIndex] * 1000. > prevTrip):
                     # A control stop has hit
                     processedRoot[index - 2].set('speedLimit',
                                                  str(SL_CONTROL_STOP))  # set the speed limit before the control stop
@@ -132,9 +132,9 @@ def preprocessDebugWorld(input):
     stepNum = 1
 
     for child in root:
-        if 15 > float(child.attrib.get('trip'))/1000. > 10:
+        if 15 > float(child.attrib.get('trip')) / 1000. > 10:
             cloud = 1  # Light overcast between 10 - 15 km of trip
-        elif 25 > float(child.attrib.get('trip'))/1000. > 20:
+        elif 25 > float(child.attrib.get('trip')) / 1000. > 20:
             cloud = 2  # Heavy overcast between 20 - 25 km of trip
         else:
             cloud = 0  # Clear skies elsewhere
@@ -161,6 +161,8 @@ def preprocessDebugWorld(input):
 
 # Loads the step data with full meteorology etc. for debugging optimization algorithm
 def loadDebugData(input):
+    global steps
+    steps = []  # Clear the container
     tree = ET.parse(input)
     root = tree.getroot()
     stepNum = 1
@@ -182,16 +184,19 @@ def loadDebugData(input):
         stepNum = stepNum + 1
     return
 
+
 def simulate(pbatt_candidate):
+    global solarCar
+
     for index, stp in enumerate(steps):
-        stp.pbatt = 490.
+        stp.pbattExp = 450.
+        stp.pbatt = stp.pbattExp + pbatt_candidate[index - 1]
         stp.advanceStep(solarCar)
-        print index
-        print stp.eTime
-        print stp.speed
 
         # Copy state variables
         if index < len(steps) - 1:
-            steps[index+1].eTime = stp.eTime
-            steps[index+1].gTime = stp.gTime
-            steps[index+1].speed = stp.speed
+            steps[index + 1].eTime = stp.eTime
+            steps[index + 1].gTime = stp.gTime
+            steps[index + 1].speed = stp.speed
+
+    return steps[-1].eTime
