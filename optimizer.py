@@ -1,3 +1,4 @@
+import multiprocessing
 import numpy as np
 
 from deap import algorithms
@@ -5,6 +6,7 @@ from deap import base
 from deap import creator
 from deap import tools
 
+import config
 import world
 
 creator.create("FitnessMin", base.Fitness, weights=(-1.0,))     # Minimize the fitness function
@@ -18,12 +20,6 @@ toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
 
 def evalOneMax(individual):
-    # Clear the state transitions of the previous individual
-    for stp in world.steps:
-        stp.clean()
-
-    # Reset the initial conditions
-    world.setInitialConditions()
 
     # TODO: Implement cost function with all the mathematical constraints
     fitness = world.simulate(individual)
@@ -66,8 +62,11 @@ toolbox.register("select", tools.selTournament, tournsize=3)
 
 
 def optimize():
+    if config.GA_MULTITHREAD:
+        pool = multiprocessing.Pool()
+        toolbox.register("map", pool.map)
 
-    pop = toolbox.population(n=10)
+    pop = toolbox.population(n=config.GA_POP_NUM)
 
     # Numpy equality function (operators.eq) between two arrays returns the
     # equality element wise, which raises an exception in the if similar()
@@ -81,7 +80,7 @@ def optimize():
     stats.register("min", np.min)
     stats.register("max", np.max)
 
-    algorithms.eaSimple(pop, toolbox, cxpb=0.5, mutpb=0.2, ngen=100, stats=stats,
+    algorithms.eaSimple(pop, toolbox, cxpb=0.5, mutpb=0.5, ngen=config.GA_GEN_NUM, stats=stats,
                         halloffame=hof)
 
     return pop, stats, hof

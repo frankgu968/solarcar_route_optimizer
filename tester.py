@@ -3,8 +3,6 @@
 # Date: July 1st, 2017
 # Dependencies: NumPy, ElementTree
 
-from datetime import datetime
-
 import optimizer
 import world
 
@@ -16,9 +14,10 @@ def main():
     # world.preprocessDebugWorld('./Data/WSC.route')
     world.loadDebugData('./Data/WSC.debug')
     world.importWorld(fname,'')
-    dt = datetime(2017, 10, 8, 13, 00)
-    world.steps[0].gTime = dt
-    world.steps[0].speed = 21.
+
+    # Set the initial conditions
+    world.setInitialConditions()
+
     #world.simulate({})
 
     optimizer.optimize()

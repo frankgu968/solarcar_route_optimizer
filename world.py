@@ -1,6 +1,7 @@
 # This is the world that the solar car runs in. It's a static class consisted of steps that encapsulate
 # the world information. Helper functions are provided in this class to load and manipulate world parameters.
 
+import copy
 import numpy as np
 import xml.etree.ElementTree as ET
 from datetime import datetime
@@ -195,17 +196,19 @@ def setInitialConditions():
 
 # Simulate the car driving the entire course of the race route with a battery power profile candidate as input
 def simulate(pbatt_candidate):
-    global solarCar
+    # Make deep copy of the exemplar to run multithread
+    tempSolarCar = copy.deepcopy(solarCar)
+    tempWorld = copy.deepcopy(steps)
 
-    for index, stp in enumerate(steps):
+    for index, stp in enumerate(tempWorld):
         stp.pbattExp = 450.
         stp.pbatt = stp.pbattExp + pbatt_candidate[index - 1]
-        stp.advanceStep(solarCar)
+        stp.advanceStep(tempSolarCar)
 
         # Copy state variables
-        if index < len(steps) - 1:
-            steps[index + 1].eTime = stp.eTime
-            steps[index + 1].gTime = stp.gTime
-            steps[index + 1].speed = stp.speed
+        if index < len(tempWorld) - 1:
+            tempWorld[index + 1].eTime = stp.eTime
+            tempWorld[index + 1].gTime = stp.gTime
+            tempWorld[index + 1].speed = stp.speed
 
-    return steps[-1].eTime
+    return tempWorld[-1].eTime
