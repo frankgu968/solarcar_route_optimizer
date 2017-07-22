@@ -5,6 +5,9 @@
 
 from datetime import timedelta
 
+import config
+
+
 class step:
     # These parameters represent the state of the system at the END of a step traversed
     # Environment states (populated during environment init)
@@ -69,6 +72,18 @@ class step:
 
         # Advance global time
         self.gTime = self.gTime + timedelta(seconds=self.stepTime)
+
+        # Check step type - Control stop
+        if self.stepType == 1:
+            # Time segment A
+            for minute in range(0, config.CS_ENTER_TIME):
+                self.battSoC += 100 * ((car.arrayOut(self) / 60) / car.BATT_CAPACITY) * car.BAT_EFF
+                self.gTime += timedelta(minutes=1)  # Increment world clock
+
+            # Time segment C
+            for minute in range(0, config.CS_EXIT_TIME):
+                self.battSoC += 100 * ((car.arrayOut(self) / 60) / car.BATT_CAPACITY) * car.BAT_EFF
+                self.gTime += timedelta(minutes=1)  # Increment world clock
         return
 
     # Checks step advancement results against presets

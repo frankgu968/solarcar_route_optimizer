@@ -21,8 +21,9 @@ class car:
     MOT_EFF = 0.95      # Motor efficiency (95%)
 
     # Car dependent parameters
-    CDA = 0.1125           # Coefficient of Drag
-    Ptire = 517e3       # Tire pressure (~75 psi)
+    BATT_CAPACITY = 6300    # Battery capacity (Wh)
+    CDA = 0.1125            # Coefficient of Drag
+    Ptire = 517e3           # Tire pressure (~75 psi)
 #    alpha
 #    beta =
     MASS = 250.         # Solar car mass (250 Kg)
@@ -149,7 +150,12 @@ class car:
     # ELEMENT: BATTERY
     # Battery output power and its effects on the battery SoC
     def battOut(self, stepInfo):
-        powerBat = stepInfo.pbatt * self.BAT_EFF
+        powerBat = 0
+
+        # Check that there is still battery
+        if stepInfo.battSoC > 0:
+            powerBat = stepInfo.pbatt * self.BAT_EFF
+
         return powerBat
 
     # -------------------- BATTERY END --------------------------------------------------
@@ -201,6 +207,10 @@ class car:
         #
         # time = quad(integrand, vPrev, stepInfo.speed)
         # # END INVALID TIME
+
+        # Decrease remaining battery charge
+        stepInfo.battSoC -= 100 * (stepInfo.pbatt * (stepInfo.stepTime / 3600) / self.BATT_CAPACITY)
+
         return stepInfo.stepTime
 
     # -------------------- ELECTROMECHANICAL END ----------------------------------------

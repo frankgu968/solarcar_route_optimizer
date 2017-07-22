@@ -191,7 +191,7 @@ def loadDebugData(input):
 def setInitialConditions():
     dt = datetime(2017, 10, 8, 13, 00)
     steps[0].gTime = dt
-
+    steps[0].battSoC = 100. # Full battery pack
     steps[0].speed = 21.    # DEBUG
 
 # Simulate the car driving the entire course of the race route with a battery power profile candidate as input
@@ -201,7 +201,7 @@ def simulate(pbatt_candidate):
     tempWorld = copy.deepcopy(steps)
 
     for index, stp in enumerate(tempWorld):
-        stp.pbattExp = 450.     # DEBUG
+        stp.pbattExp = 230.     # DEBUG
         stp.pbatt = stp.pbattExp + pbatt_candidate[index - 1]
         stp.advanceStep(tempSolarCar)
 
@@ -210,5 +210,6 @@ def simulate(pbatt_candidate):
             tempWorld[index + 1].eTime = stp.eTime
             tempWorld[index + 1].gTime = stp.gTime
             tempWorld[index + 1].speed = stp.speed
+            tempWorld[index + 1].battSoC = stp.battSoC
 
     return tempWorld[-1].eTime
