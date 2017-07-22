@@ -6,6 +6,7 @@
 from datetime import timedelta
 
 import config
+import sun
 
 
 class step:
@@ -79,6 +80,22 @@ class step:
             for minute in range(0, config.CS_ENTER_TIME):
                 self.battSoC += 100 * ((car.arrayOut(self) / 60) / car.BATT_CAPACITY) * car.BAT_EFF
                 self.gTime += timedelta(minutes=1)  # Increment world clock
+
+            # Time segment B
+            # 1. Get sun's location 15 minutes into the control stop
+            sunInfo = sun.info(self.gTime + timedelta(config.CS_WAIT_TIME / 2), self.timezone, self.location)
+            realHeading = self.heading
+            realInclination = self.inclination
+            # 2. Position car's array towards the sun's expected position
+            self.heading = sunInfo[0]
+            self.inclination = sunInfo[1]
+            # 3. Begin charging
+            for minute in range(0, config.CS_WAIT_TIME):
+                self.battSoC += 100 * ((car.arrayOut(self) / 60) / car.BATT_CAPACITY) * car.BAT_EFF
+                self.gTime += timedelta(minutes=1)  # Increment world clock
+            # 4. Restore array position to head out of control stop
+            self.heading = realHeading
+            self.inclination = realInclination
 
             # Time segment C
             for minute in range(0, config.CS_EXIT_TIME):
