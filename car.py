@@ -118,9 +118,13 @@ class car:
                 meshVec = np.matmul(tElevation, tempVec)
                 unitPower = insolation * (0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
 
-                if(unitPower > 0):
+                if unitPower > 0:
                     power += unitPower
-                # FIXME: Add an ambient diffuse term? Ambient efficieny * unitPower
+                else:
+                    # ASSUMPTION: Panel elements facing away from the Sun vector will receive ambient power
+                    # FIXME: Add an ambient diffuse term? Ambient efficieny * unitPower
+                    power += -0.3 * unitPower
+
 
         else:
             # Flat panel model; No consideration to array geometry

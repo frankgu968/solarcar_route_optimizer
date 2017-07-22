@@ -1,6 +1,6 @@
 
 # Simulation configurations
-ARRAY_MESH_CALCULATION = True
+ARRAY_MESH_CALCULATION = False
 
 # Genetic Algorithm configurations
 GA_POP_NUM = 10         # Population per generation

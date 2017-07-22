@@ -201,7 +201,7 @@ def simulate(pbatt_candidate):
     tempWorld = copy.deepcopy(steps)
 
     for index, stp in enumerate(tempWorld):
-        stp.pbattExp = 450.
+        stp.pbattExp = 450.     # DEBUG
         stp.pbatt = stp.pbattExp + pbatt_candidate[index - 1]
         stp.advanceStep(tempSolarCar)
 
