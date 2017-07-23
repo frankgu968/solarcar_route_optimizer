@@ -124,7 +124,7 @@ class car:
                 else:
                     # ASSUMPTION: Panel elements facing away from the Sun vector will receive ambient power
                     # FIXME: Tune the ambient diffuse term. (power contribution = Ambient efficieny * unitPower)
-                    power += -0.5 * unitPower
+                    power += -0.3 * unitPower
 
 
         else:
