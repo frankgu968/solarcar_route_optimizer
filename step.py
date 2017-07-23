@@ -83,12 +83,12 @@ class step:
 
             # Time segment B
             # 1. Get sun's location 15 minutes into the control stop
-            sunInfo = sun.info(self.gTime + timedelta(config.CS_WAIT_TIME / 2), self.timezone, self.location)
+            sunInfo = sun.info(self.gTime + timedelta(minutes=config.CS_WAIT_TIME / 2), self.timezone, self.location)
             realHeading = self.heading
             realInclination = self.inclination
             # 2. Position car's array towards the sun's expected position
-            self.heading = sunInfo[0]
-            self.inclination = sunInfo[1]
+            self.heading = sunInfo[1]
+            self.inclination = sunInfo[0]
             # 3. Begin charging
             for minute in range(0, config.CS_WAIT_TIME):
                 self.battSoC += 100 * ((car.arrayOut(self) / 60) / car.BATT_CAPACITY) * car.BAT_EFF

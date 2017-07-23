@@ -3,8 +3,12 @@
 # Date: July 1st, 2017
 # Dependencies: NumPy, ElementTree
 
+from timeit import default_timer as timer
+
 import optimizer
 import world
+
+
 # import step
 # from datetime import datetime
 # import car
@@ -22,8 +26,11 @@ def main():
 
     # world.simulate({})
 
+    start = timer()
     optimizer.optimize()
+    end = timer()
 
+    print 'Compute time: ' + str(end - start)
     # Finds average solar power of array across the whole day
     # jd1 = 0
     # stp = step.step(1, 35, [-12.462827, 130.841782], 500.0, 1500., 130.,  0., 135., 0., [0.,0.], 0, 0.)

@@ -129,7 +129,7 @@ class car:
 
         else:
             # Flat panel model; No consideration to array geometry
-            power = insolation * self.arrayArea * self.ARRAY_EFF * np.sin(np.deg2rad(sunInfo[0]))
+            power = insolation * self.arrayArea * self.ARRAY_EFF * np.sin(90-np.deg2rad(np.abs(sunInfo[0]-stepInfo.inclination)))
 
         # TODO: Implement temperature effects on panel efficiency
         # TODO: Implement cloud coverage effects
