@@ -3,6 +3,7 @@
 # Author: Frank Gu
 # Date: July 2nd, 2017
 
+from datetime import datetime
 from datetime import timedelta
 
 import config
@@ -125,19 +126,33 @@ class step:
 
     # TODO: Process end of day / beginning of day charging results
     def processEOD(self, car):
+        stopOffsetMins = self.gTime.minute  # Number of minutes past stop time
         sunrise, sunset = sun.getSunRiseSetTime(self.gTime, self.timezone, self.location)
 
-        # 1. Calculate energy obtained before sunset
-        minutes = int((sunset - self.gTime).seconds / 60)
+        # 1. Calculate energy obtained before sunset (Evening charge)
+        minutes = int((sunset - self.gTime).seconds / 60) - config.SE_END_SETUP_TIME
+        # Set up time before charging
+        for minute in range(0, config.SE_END_SETUP_TIME):
+            self.gTime += timedelta(minutes=1)  # Increment global time
+            car.battIn(self, car.arrayOut(car.arrayIn(self)), 1)
+
+        # End of day charging
         for minute in range(0,minutes):
-            self.gTime += timedelta(minutes=1)  # Incremend global time
+            self.gTime += timedelta(minutes=1)  # Increment global time
             car.battIn(self, car.arrayOut(car.arrayIn(self, 2)), 1)
 
-
         # 2. Calculate energy obtained before beginning of drive
-        diff = sunset - self.gTime
-        minutes = diff.hour * 60 + diff.minute
-        power = car.arrayIn(self, 2)
+        startTime = datetime(self.gTime.year, self.gTime.month, self.gTime.day + 1, 8, stopOffsetMins)
+        self.gTime = sunrise
+        minutes = int((startTime - self.gTime).seconds / 60) - config.SE_START_SETUP_TIME
+        # Beginning of day charging
+        for minute in range(0, minutes):
+            self.gTime += timedelta(minutes=1)  # Increment global time
+            car.battIn(self, car.arrayOut(car.arrayIn(self, 2)), 1)
+
+        for minute in range(0, config.SE_START_SETUP_TIME):
+            self.gTime += timedelta(minutes=1)  # Increment global time
+            car.battIn(self, car.arrayOut(car.arrayIn(self)), 1)
 
     # Checks step advancement results against presets
     # Returns True iff constraints are met
