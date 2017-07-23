@@ -19,6 +19,7 @@ class car:
     BAT_EFF = 0.85      # Battery Coulombic efficiency
     ARRAY_EFF = 0.243   # Solar panel nominal efficiency (24.3%)
     MOT_EFF = 0.95      # Motor efficiency (95%)
+    DIFFUSE_EFF = 0.3   # Diffuse array collector power factor (30%)
 
     # Car dependent parameters
     BATT_CAPACITY = 6300    # Battery capacity (Wh)
@@ -82,6 +83,7 @@ class car:
 
                 elif line == '$Elements':
                     mode = 2
+        self.arrayGeometry = np.asarray(self.arrayGeometry)
         return lines
 
     # ELEMENT: ARRAY
@@ -95,37 +97,50 @@ class car:
 
         if config.ARRAY_MESH_CALCULATION:
             # Create the sun's unit vector with Azimuth and elevation
-            sunVec = -np.array([np.sin(np.deg2rad(sunInfo[1])) * np.cos(np.deg2rad(sunInfo[0])),
-                               np.cos(np.deg2rad(sunInfo[1])) * np.sin(np.deg2rad(sunInfo[0])),
-                               np.sin(np.deg2rad(sunInfo[0]))])
 
-            tRotation = np.array([[np.cos(np.deg2rad(-stepInfo.heading)), -np.sin(-np.deg2rad(stepInfo.heading)), 0],
-                                  [np.sin(np.deg2rad(-stepInfo.heading)), np.cos(-np.deg2rad(stepInfo.heading)), 0],
-                                  [0, 0, 1]])
 
-            # FIXME: Array mesh simulation seems to take a VERY long time; find a way to optimize this!
-            for meshElement in self.arrayGeometry:
-                # Rotate the car in 3D with heading and elevation
-                # Rotate the car's heading
+            modSunVec = -np.array([np.sin(np.deg2rad(sunInfo[1] - stepInfo.heading)) * np.cos(np.deg2rad(sunInfo[0] - stepInfo.inclination)),
+                               np.cos(np.deg2rad(sunInfo[1] - stepInfo.heading)) * np.sin(np.deg2rad(sunInfo[0] - stepInfo.inclination)),
+                               np.sin(np.deg2rad(sunInfo[0] - stepInfo.inclination))])
 
-                tempVec = np.matmul(tRotation, meshElement)  # Transformed mesh element normal vector
+            meshPowerMat = np.matmul(self.arrayGeometry, modSunVec) * 0.5 * insolation * self.ARRAY_EFF
+            # Mesh elements receiving direct sunlight
+            meshDirect = np.extract(np.ma.masked_less(meshPowerMat, 0.), meshPowerMat)
+            # Mesh elements receiving diffuse sunlight
+            # ASSUMPTION: Panel elements facing away from the Sun vector will receive ambient power
+            # FIXME: Tune the ambient diffuse term. (power contribution = Ambient efficieny * unitPower)
+            meshDiffuse = np.extract(np.ma.masked_greater(meshPowerMat, 0.), meshPowerMat) * (-self.DIFFUSE_EFF)
+            power = np.sum(meshDirect) + np.sum(meshDiffuse)
 
-                # Rotate the car's inclination
-                # 1. Obtain the axis of rotation
-                axis = np.cross(meshElement, np.array([meshElement[0], meshElement[1], 0]))
-                # 2. Apply Euler-Rodrigues formula to create transformation matrix
-                tElevation = world_helpers.rotation_matrix(axis, np.deg2rad(-stepInfo.inclination))
-                # 3. Apply transformation
-                meshVec = np.matmul(tElevation, tempVec)
-                unitPower = insolation * (0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
-
-                if unitPower > 0:
-                    power += unitPower
-                else:
-                    # ASSUMPTION: Panel elements facing away from the Sun vector will receive ambient power
-                    # FIXME: Tune the ambient diffuse term. (power contribution = Ambient efficieny * unitPower)
-                    power += -0.3 * unitPower
-
+            # sunVec = -np.array([np.sin(np.deg2rad(sunInfo[1])) * np.cos(np.deg2rad(sunInfo[0])),
+            #                     np.cos(np.deg2rad(sunInfo[1])) * np.sin(np.deg2rad(sunInfo[0])),
+            #                     np.sin(np.deg2rad(sunInfo[0]))])
+            #
+            # tRotation = np.array([[np.cos(np.deg2rad(-stepInfo.heading)), -np.sin(-np.deg2rad(stepInfo.heading)), 0],
+            #                       [np.sin(np.deg2rad(-stepInfo.heading)), np.cos(-np.deg2rad(stepInfo.heading)), 0],
+            #                       [0, 0, 1]])
+            #
+            # power = 0
+            # for meshElement in self.arrayGeometry:
+            #     # Rotate the car in 3D with heading and elevation
+            #     # Rotate the car's heading
+            #
+            #     tempVec = np.matmul(tRotation, meshElement)  # Transformed mesh element normal vector
+            #
+            #     # Rotate the car's inclination
+            #     # 1. Obtain the axis of rotation
+            #     axis = np.cross(meshElement, np.array([meshElement[0], meshElement[1], 0]))
+            #     # 2. Apply Euler-Rodrigues formula to create transformation matrix
+            #     tElevation = world_helpers.rotation_matrix(axis, np.deg2rad(-stepInfo.inclination))
+            #     # 3. Apply transformation
+            #     meshVec = np.matmul(tElevation, tempVec)
+            #     unitPower = insolation * (0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
+            #
+            #     if unitPower > 0:
+            #         power += unitPower
+            #     else:
+            #
+            #         power += -0.3 * unitPower
 
         else:
             # Flat panel model; No consideration to array geometry

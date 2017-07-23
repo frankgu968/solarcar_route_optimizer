@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2668b710-fac1-41f6-8880-c74f796944b7" name="Default" comment="- Fixed issue with flat panel model&#10;- Added timing facility&#10;- Fixed control stop state saving bug">
+    <list default="true" id="2668b710-fac1-41f6-8880-c74f796944b7" name="Default" comment="Fixed car diffuse power term for realism">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/car.py" afterPath="$PROJECT_DIR$/car.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config.py" afterPath="$PROJECT_DIR$/config.py" />
     </list>
     <ignored path="Data/WSC.route" />
     <ignored path="Data/WSC.debug" />
@@ -22,7 +23,7 @@
         <entry file="file://$PROJECT_DIR$/sun.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="120">
-              <caret line="120" column="31" lean-forward="true" selection-start-line="120" selection-start-column="31" selection-end-line="120" selection-end-column="31" />
+              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -43,7 +44,7 @@
       <file leaf-file-name="optimizer.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/optimizer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1537">
+            <state relative-caret-position="637">
               <caret line="82" column="57" lean-forward="false" selection-start-line="82" selection-start-column="57" selection-end-line="82" selection-end-column="57" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
@@ -56,8 +57,8 @@
       <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="160">
-              <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+            <state relative-caret-position="40">
+              <caret line="2" column="29" lean-forward="false" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -66,8 +67,8 @@
       <file leaf-file-name="world.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/world.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="326">
-              <caret line="197" column="30" lean-forward="true" selection-start-line="197" selection-start-column="30" selection-end-line="197" selection-end-column="30" />
+            <state relative-caret-position="-3280">
+              <caret line="16" column="47" lean-forward="false" selection-start-line="16" selection-start-column="47" selection-end-line="16" selection-end-column="47" />
               <folding>
                 <element signature="e#215#226#0" expanded="true" />
               </folding>
@@ -91,11 +92,11 @@
       <file leaf-file-name="car.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/car.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="126" column="33" lean-forward="false" selection-start-line="126" selection-start-column="33" selection-end-line="126" selection-end-column="33" />
+            <state relative-caret-position="274">
+              <caret line="153" column="20" lean-forward="true" selection-start-line="153" selection-start-column="20" selection-end-line="153" selection-end-column="20" />
               <folding>
                 <element signature="e#148#166#0" expanded="true" />
-                <marker date="1500778452438" expanded="true" signature="8372:10314" ph="..." />
+                <marker date="1500828284201" expanded="true" signature="9417:11359" ph="..." />
               </folding>
             </state>
           </provider>
@@ -105,8 +106,10 @@
         <entry file="file://$PROJECT_DIR$/step.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="131">
-              <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
-              <folding />
+              <caret line="103" column="0" lean-forward="false" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
+              <folding>
+                <element signature="e#166#196#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -152,13 +155,13 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/PowerBus.py" />
-        <option value="$PROJECT_DIR$/sun.py" />
         <option value="$PROJECT_DIR$/world_helpers.py" />
         <option value="$PROJECT_DIR$/optimizer.py" />
         <option value="$PROJECT_DIR$/tester.py" />
         <option value="$PROJECT_DIR$/step.py" />
         <option value="$PROJECT_DIR$/config.py" />
         <option value="$PROJECT_DIR$/world.py" />
+        <option value="$PROJECT_DIR$/sun.py" />
         <option value="$PROJECT_DIR$/car.py" />
       </list>
     </option>
@@ -498,7 +501,14 @@
       <option name="project" value="LOCAL" />
       <updated>1500751365279</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Fixed car diffuse power term for realism">
+      <created>1500778637734</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1500778637734</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -517,7 +527,7 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977304" sideWeight="0.49722221" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28838453" sideWeight="0.23888889" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28838453" sideWeight="0.76111114" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28838453" sideWeight="0.76111114" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977304" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -599,16 +609,17 @@
     <MESSAGE value="Added ambient diffusion to algorithm" />
     <MESSAGE value="Added battery drainage based on simple energy I/O from each step and its associated activities. Implemented control stop time segment A and C; wait time with panels pointed towards the sun is NOT implemented yet..." />
     <MESSAGE value="Completed control stop logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="Completed control stop logic" />
+    <MESSAGE value="Fixed car diffuse power term for realism" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed car diffuse power term for realism" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/step.py</url>
-          <line>103</line>
-          <option name="timeStamp" value="74" />
+          <url>file://$PROJECT_DIR$/car.py</url>
+          <line>119</line>
+          <option name="timeStamp" value="77" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -618,14 +629,12 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="75" />
+      <option name="time" value="80" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="world.steps" language="Python" />
-        <watch expression="solarCar" language="Python" />
-        <watch expression="steps" language="Python" />
-        <watch expression="np.sin(90 -np.deg2rad(np.abs(sunInfo[0]-stepInfo.inclination)))" language="Python" />
+        <watch expression="np.ma.masked_less(meshPowerMat, 0)" language="Python" />
       </configuration>
     </watches-manager>
   </component>
@@ -674,7 +683,7 @@
           <caret line="89" column="0" lean-forward="false" selection-start-line="89" selection-start-column="0" selection-end-line="89" selection-end-column="0" />
           <folding>
             <element signature="e#148#166#0" expanded="true" />
-            <marker date="1500778452438" expanded="true" signature="8372:10314" ph="..." />
+            <marker date="1500828284201" expanded="true" signature="9417:11359" ph="..." />
           </folding>
         </state>
       </provider>
@@ -683,7 +692,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1320">
           <caret line="66" column="66" lean-forward="false" selection-start-line="66" selection-start-column="66" selection-end-line="66" selection-end-column="66" />
-          <folding />
+          <folding>
+            <element signature="e#166#196#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -712,7 +723,7 @@
           <caret line="119" column="8" lean-forward="false" selection-start-line="119" selection-start-column="8" selection-end-line="119" selection-end-column="8" />
           <folding>
             <element signature="e#148#166#0" expanded="true" />
-            <marker date="1500778452438" expanded="true" signature="8372:10314" ph="..." />
+            <marker date="1500828284201" expanded="true" signature="9417:11359" ph="..." />
           </folding>
         </state>
       </provider>
@@ -760,7 +771,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="680">
           <caret line="34" column="37" lean-forward="false" selection-start-line="34" selection-start-column="37" selection-end-line="34" selection-end-column="37" />
-          <folding />
+          <folding>
+            <element signature="e#166#196#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -817,7 +830,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="620">
           <caret line="31" column="12" lean-forward="false" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="12" />
-          <folding />
+          <folding>
+            <element signature="e#166#196#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -827,7 +842,7 @@
           <caret line="123" column="9" lean-forward="true" selection-start-line="123" selection-start-column="9" selection-end-line="123" selection-end-column="9" />
           <folding>
             <element signature="e#148#166#0" expanded="true" />
-            <marker date="1500778452438" expanded="true" signature="8372:10314" ph="..." />
+            <marker date="1500828284201" expanded="true" signature="9417:11359" ph="..." />
           </folding>
         </state>
       </provider>
@@ -854,7 +869,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="720">
           <caret line="36" column="102" lean-forward="false" selection-start-line="36" selection-start-column="33" selection-end-line="36" selection-end-column="102" />
-          <folding />
+          <folding>
+            <element signature="e#166#196#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -864,7 +881,7 @@
           <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
           <folding>
             <element signature="e#148#166#0" expanded="true" />
-            <marker date="1500778452438" expanded="true" signature="8372:10314" ph="..." />
+            <marker date="1500828284201" expanded="true" signature="9417:11359" ph="..." />
           </folding>
         </state>
       </provider>
@@ -894,7 +911,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="254">
           <caret line="74" column="0" lean-forward="false" selection-start-line="74" selection-start-column="0" selection-end-line="74" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#166#196#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -935,7 +954,7 @@
           <caret line="123" column="8" lean-forward="false" selection-start-line="123" selection-start-column="8" selection-end-line="123" selection-end-column="8" />
           <folding>
             <element signature="e#148#166#0" expanded="true" />
-            <marker date="1500778452438" expanded="true" signature="8372:10314" ph="..." />
+            <marker date="1500828284201" expanded="true" signature="9417:11359" ph="..." />
           </folding>
         </state>
       </provider>
@@ -970,7 +989,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="720">
           <caret line="36" column="102" lean-forward="false" selection-start-line="36" selection-start-column="33" selection-end-line="36" selection-end-column="102" />
-          <folding />
+          <folding>
+            <element signature="e#166#196#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -980,7 +1001,7 @@
           <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
           <folding>
             <element signature="e#148#166#0" expanded="true" />
-            <marker date="1500778452438" expanded="true" signature="8372:10314" ph="..." />
+            <marker date="1500828284201" expanded="true" signature="9417:11359" ph="..." />
           </folding>
         </state>
       </provider>
@@ -1020,25 +1041,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/optimizer.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1537">
-          <caret line="82" column="57" lean-forward="false" selection-start-line="82" selection-start-column="57" selection-end-line="82" selection-end-column="57" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-            <marker date="1500692520037" expanded="true" signature="2736:2740" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sun.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="120" column="31" lean-forward="true" selection-start-line="120" selection-start-column="31" selection-end-line="120" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tester.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="100">
@@ -1049,11 +1051,50 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="2" column="29" lean-forward="false" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/optimizer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="637">
+          <caret line="82" column="57" lean-forward="false" selection-start-line="82" selection-start-column="57" selection-end-line="82" selection-end-column="57" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+            <marker date="1500692520037" expanded="true" signature="2736:2740" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/step.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="131">
-          <caret line="68" column="0" lean-forward="false" selection-start-line="68" selection-start-column="0" selection-end-line="68" selection-end-column="0" />
+          <caret line="103" column="0" lean-forward="false" selection-start-line="103" selection-start-column="0" selection-end-line="103" selection-end-column="0" />
+          <folding>
+            <element signature="e#166#196#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sun.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/world.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3280">
+          <caret line="16" column="47" lean-forward="false" selection-start-line="16" selection-start-column="47" selection-end-line="16" selection-end-column="47" />
+          <folding>
+            <element signature="e#215#226#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1068,31 +1109,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/world.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="197" column="30" lean-forward="true" selection-start-line="197" selection-start-column="30" selection-end-line="197" selection-end-column="30" />
-          <folding>
-            <element signature="e#215#226#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/car.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="126" column="33" lean-forward="false" selection-start-line="126" selection-start-column="33" selection-end-line="126" selection-end-column="33" />
+        <state relative-caret-position="274">
+          <caret line="153" column="20" lean-forward="true" selection-start-line="153" selection-start-column="20" selection-end-line="153" selection-end-column="20" />
           <folding>
             <element signature="e#148#166#0" expanded="true" />
-            <marker date="1500778452438" expanded="true" signature="8372:10314" ph="..." />
+            <marker date="1500828284201" expanded="true" signature="9417:11359" ph="..." />
           </folding>
         </state>
       </provider>
