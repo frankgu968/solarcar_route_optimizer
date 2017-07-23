@@ -78,7 +78,7 @@ class step:
         if self.stepType == 1:
             # Time segment A
             for minute in range(0, config.CS_ENTER_TIME):
-                car.battIn(self, car.arrayOut(self), 1)
+                car.battIn(self, car.arrayOut(car.arrayIn(self)), 1)
                 self.gTime += timedelta(minutes=1)  # Increment world clock
 
             # Time segment B
@@ -91,7 +91,7 @@ class step:
             self.inclination = sunInfo[0]
             # 3. Begin charging
             for minute in range(0, config.CS_WAIT_TIME):
-                car.battIn(self, car.arrayOut(self), 1)
+                car.battIn(self, car.arrayOut(car.arrayIn(self)), 1)
                 self.gTime += timedelta(minutes=1)  # Increment world clock
             # 4. Restore array position to head out of control stop
             self.heading = realHeading
@@ -99,7 +99,7 @@ class step:
 
             # Time segment C
             for minute in range(0, config.CS_EXIT_TIME):
-                car.battIn(self, car.arrayOut(self), 1)
+                car.battIn(self, car.arrayOut(car.arrayIn(self)), 1)
                 self.gTime += timedelta(minutes=1)  # Increment world clock
 
         # End of day reached (hour = 17)
