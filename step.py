@@ -115,13 +115,29 @@ class step:
 
                 # If the sun has more power in the evening, stop immediately to begin charging
                 if eveningInsolation >= morningInslation:
-                    self.stepType = 2
-                    # TODO: Get end of day energy
-                    power = car.arrayOut(self, 2)
+                    self.stepType = 2   # End of day decision made
+                    self.processEOD(car)
+
             else:
                 self.stepType = 2       # End of day decision made
-                # TODO: Get end of day energy
+                self.processEOD(car)
         return
+
+    # TODO: Process end of day / beginning of day charging results
+    def processEOD(self, car):
+        sunrise, sunset = sun.getSunRiseSetTime(self.gTime, self.timezone, self.location)
+
+        # 1. Calculate energy obtained before sunset
+        minutes = int((sunset - self.gTime).seconds / 60)
+        for minute in range(0,minutes):
+            self.gTime += timedelta(minutes=1)  # Incremend global time
+            car.battIn(self, car.arrayOut(car.arrayIn(self, 2)), 1)
+
+
+        # 2. Calculate energy obtained before beginning of drive
+        diff = sunset - self.gTime
+        minutes = diff.hour * 60 + diff.minute
+        power = car.arrayIn(self, 2)
 
     # Checks step advancement results against presets
     # Returns True iff constraints are met

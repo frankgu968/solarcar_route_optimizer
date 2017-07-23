@@ -4,6 +4,8 @@
 # Date: July 1st, 2017
 
 import math
+from datetime import datetime
+from datetime import timedelta
 
 
 # location [lat long]
@@ -96,7 +98,7 @@ def info(gTime, timezone, location):
         ar = (58.1 / math.tan(math.radians(sea)) - 0.07 / math.pow(math.tan(math.radians(sea)), 3) +
               0.000086 / math.pow(math.tan(math.radians(sea)), 5)) / 3600
     elif sea > -0.575:
-        ar = (1735 - 518.2 * sea + 103.4 * math.pow(sea, 2) - 12.79 * math.pow(sea, 3) + 0.711 * math.pow(sea, 4))
+        ar = (1735 - 518.2 * sea + 103.4 * math.pow(sea, 2) - 12.79 * math.pow(sea, 3) + 0.711 * math.pow(sea, 4)) / 3600.
     else:
         ar = -20.774 / (3600 * math.tan(math.radians(sea)))
 
@@ -118,14 +120,26 @@ def info(gTime, timezone, location):
 
 
 def getSunRiseSetTime(gTime, timezone, location):
+    # Current day sunset time
     sunInfo = info(gTime, timezone, location)
     solarNoon = (720 - 4 * location[1] - sunInfo[2] + timezone * 60) / 1440
     hasr = math.degrees(math.acos(
         math.cos(math.radians(90.833)) / (math.cos(math.radians(location[0])) * math.cos(math.radians(sunInfo[3]))) -
         math.tan(math.radians(location[0])) * math.tan(math.radians(sunInfo[3]))))
-    sunrise = solarNoon - hasr * 4 / 1440
     sunset = solarNoon + hasr * 4 / 1440
-    return [sunrise, sunset]
+
+    # Increment day to calculate sunrise time for the next day
+    sunInfo = info(gTime + timedelta(days=1), timezone, location)
+    solarNoon = (720 - 4 * location[1] - sunInfo[2] + timezone * 60) / 1440
+    hasr = math.degrees(math.acos(
+        math.cos(math.radians(90.833)) / (math.cos(math.radians(location[0])) * math.cos(math.radians(sunInfo[3]))) -
+        math.tan(math.radians(location[0])) * math.tan(math.radians(sunInfo[3]))))
+    sunrise = solarNoon - hasr * 4 / 1440
+
+    # Parse the datetime object of sunrise and sunset times
+    dt_sunrise = datetime(2017, 10, gTime.day+1, int(sunrise*24), int(60*(sunrise-int(sunrise*24)/24)))
+    dt_sunset = datetime(2017, 10, gTime.day, int(sunset*24), int(60*(sunset-int(sunset*24)/24)))
+    return dt_sunrise, dt_sunset
 
 
 def air_mass(h):
