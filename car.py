@@ -97,9 +97,7 @@ class car:
         power = 0.
 
         if config.ARRAY_MESH_CALCULATION:
-            # Create the sun's unit vector with Azimuth and elevation
-
-
+            # Create the sun's unit vector with relative to the car's heading and azimuth
             modSunVec = -np.array([np.sin(np.deg2rad(sunInfo[1] - stepInfo.heading)) * np.cos(np.deg2rad(sunInfo[0] - stepInfo.inclination)),
                                np.cos(np.deg2rad(sunInfo[1] - stepInfo.heading)) * np.sin(np.deg2rad(sunInfo[0] - stepInfo.inclination)),
                                np.sin(np.deg2rad(sunInfo[0] - stepInfo.inclination))])
@@ -155,8 +153,26 @@ class car:
 
     # ELEMENT: MPPT
     # Maximum Power Point Tracker consolidating tracking and conversion efficiency
-    def arrayOut(self, stepInfo):
-        arrRaw = self.arrayIn(stepInfo)
+    # Input - stepInfo: The step object that the car is operating in
+    #       - mode    : 0 -> Regular driving step; 2 -> end of day, array pointing towards the sun
+    def arrayOut(self, stepInfo, mode=0):
+        if mode == 2:
+            # End of day directional charging
+            sunInfo = sun.info(stepInfo.gTime, stepInfo.timezone, stepInfo.location)
+            insolation = sun.irradiance(sunInfo)  # The amount of power hitting the surface of the Earth
+
+            normalSunVec = np.array([0,0,-1])     # Assumes that the sun panel's geometric normal is pointing directly at the sun
+            meshPowerMat = np.matmul(self.arrayGeometry, normalSunVec) * 0.5 * insolation * self.ARRAY_EFF
+            # Mesh elements receiving direct sunlight
+            meshDirect = np.extract(np.ma.masked_less(meshPowerMat, 0.), meshPowerMat)
+
+            # Mesh elements receiving diffuse sunlight
+            # ASSUMPTION: Panel elements facing indirectly towards the sun will receive same solar collection efficiency
+            # as those directly due to Gochermann high-angle refraction crystal lamination
+            meshDiffuse = np.extract(np.ma.masked_greater(meshPowerMat, 0.), meshPowerMat) * (-1.0)
+            arrRaw = np.sum(meshDirect) + np.sum(meshDiffuse)
+        else:
+            arrRaw = self.arrayIn(stepInfo)
         powerOut = arrRaw * self.MPPT_EFF
         return powerOut
 

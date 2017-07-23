@@ -117,6 +117,7 @@ class step:
                 if eveningInsolation >= morningInslation:
                     self.stepType = 2
                     # TODO: Get end of day energy
+                    power = car.arrayOut(self, 2)
             else:
                 self.stepType = 2       # End of day decision made
                 # TODO: Get end of day energy
