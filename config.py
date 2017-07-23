@@ -1,11 +1,11 @@
 
 # Simulation configurations
-ARRAY_MESH_CALCULATION = False
+ARRAY_MESH_CALCULATION = True
 
 # Genetic Algorithm configurations
 GA_POP_NUM = 10         # Population per generation
 GA_GEN_NUM = 100        # Number of generations
-GA_MULTITHREAD = False  # Enable multithreading
+GA_MULTITHREAD = True  # Enable multithreading
 
 # Route parameters
 SL_CONTROL_STOP = 16.67  # Control stop speed limit (ms-1)
