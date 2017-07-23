@@ -16,7 +16,8 @@ class car:
     # Static efficiency blobs
     ELEC_LP_POWER = 15. # Electrical low-power system power = 15 W
     MPPT_EFF = 0.97     # Average MPPT efficiency (97%)
-    BAT_EFF = 0.85      # Battery Coulombic efficiency
+    BAT_DISCHARGE_EFF = 0.85      # Battery discharging efficiency
+    BAT_CHARGE_EFF = 0.85         # Battery charging efficiency
     ARRAY_EFF = 0.243   # Solar panel nominal efficiency (24.3%)
     MOT_EFF = 0.95      # Motor efficiency (95%)
     DIFFUSE_EFF = 0.3   # Diffuse array collector power factor (30%)
@@ -169,7 +170,7 @@ class car:
 
         # Check that there is still battery
         if stepInfo.battSoC > 0:
-            powerBat = stepInfo.pbatt * self.BAT_EFF
+            powerBat = stepInfo.pbatt * self.BAT_DISCHARGE_EFF
 
         return powerBat
 
@@ -177,7 +178,7 @@ class car:
     # Input - Power (Watts)
     #       - Duration (minutes)
     def battIn(self, stepInfo, power, duration):
-        stepInfo.battSoC += 100 * (power * duration / 60) / self.BATT_CAPACITY * self.BAT_EFF
+        stepInfo.battSoC += 100 * (power * duration / 60) / self.BATT_CAPACITY * self.BAT_CHARGE_EFF
 
     # -------------------- BATTERY END --------------------------------------------------
 
