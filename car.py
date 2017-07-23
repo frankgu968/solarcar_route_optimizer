@@ -173,6 +173,12 @@ class car:
 
         return powerBat
 
+    # Battery charging and its effects on battery SoC
+    # Input - Power (Watts)
+    #       - Duration (minutes)
+    def battIn(self, stepInfo, power, duration):
+        stepInfo.battSoC += 100 * (power * duration / 60) / self.BATT_CAPACITY * self.BAT_EFF
+
     # -------------------- BATTERY END --------------------------------------------------
 
     # -------------------- TELEMETRY START ----------------------------------------------
