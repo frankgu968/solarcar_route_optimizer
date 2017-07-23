@@ -165,6 +165,7 @@ class car:
     # -------------------- BATTERY START ------------------------------------------------
     # ELEMENT: BATTERY
     # Battery output power and its effects on the battery SoC
+    # FIXME: Better battery discharge modeling algorithm
     def battOut(self, stepInfo):
         powerBat = 0
 
@@ -177,6 +178,7 @@ class car:
     # Battery charging and its effects on battery SoC
     # Input - Power (Watts)
     #       - Duration (minutes)
+    # FIXME: Better battery charge modeling algorithm
     def battIn(self, stepInfo, power, duration):
         stepInfo.battSoC += 100 * (power * duration / 60) / self.BATT_CAPACITY * self.BAT_CHARGE_EFF
 

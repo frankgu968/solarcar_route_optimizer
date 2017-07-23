@@ -189,7 +189,7 @@ def loadDebugData(input):
 
 # Set the starting conditions of the race (date, time, speed etc.)
 def setInitialConditions():
-    dt = datetime(2017, 10, 8, 12, 30)
+    dt = datetime(2017, 10, 8, 16, 55)
     steps[0].gTime = dt
     steps[0].battSoC = 100. # Full battery pack
     steps[0].speed = 21.    # DEBUG

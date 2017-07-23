@@ -101,6 +101,25 @@ class step:
             for minute in range(0, config.CS_EXIT_TIME):
                 car.battIn(self, car.arrayOut(self), 1)
                 self.gTime += timedelta(minutes=1)  # Increment world clock
+
+        # End of day reached (hour = 17)
+        if self.gTime.hour >= 17:
+            # NOTE: cutting short at 9 minutes to ensure that we don't stop after 17:10!!!
+            if self.gTime.minute < 9:
+                # Optimize end of day decision point
+                sunInfo = sun.info(self.gTime, self.timezone, self.location)
+                eveningInsolation = sun.irradiance(sunInfo)
+
+                sunInfo = sun.info(self.gTime + timedelta(hours=15), self.timezone, self.location)
+                morningInslation = sun.irradiance(sunInfo)
+
+                # If the sun has more power in the evening, stop immediately to begin charging
+                if eveningInsolation >= morningInslation:
+                    self.stepType = 2
+                    # TODO: Get end of day energy
+            else:
+                self.stepType = 2       # End of day decision made
+                # TODO: Get end of day energy
         return
 
     # Checks step advancement results against presets
