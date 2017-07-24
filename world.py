@@ -201,7 +201,7 @@ def simulate(pbatt_candidate):
     tempWorld = copy.deepcopy(steps)
 
     for index, stp in enumerate(tempWorld):
-        stp.pbattExp = 230.     # DEBUG
+        stp.pbattExp = 360.     # DEBUG: Make sure this value is higher than the rolling resistance value; or the mathematics may fail!
         stp.pbatt = stp.pbattExp + pbatt_candidate[index - 1]
         stp.advanceStep(tempSolarCar)
 
