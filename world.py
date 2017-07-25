@@ -7,6 +7,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 
 import car
+import config
 import step
 from world_helpers import haversine
 
@@ -182,6 +183,9 @@ def loadDebugData(input):
                              [float(child.attrib.get('windSpd')), float(child.attrib.get('windDir'))],
                              int(child.attrib.get('stepType')),
                              float(child.attrib.get('timezone')))
+
+        if config.EN_WIND == False:
+            tempStep.wind = [0., 0.]
         steps.append(tempStep)
         stepNum = stepNum + 1
     return
@@ -189,7 +193,7 @@ def loadDebugData(input):
 
 # Set the starting conditions of the race (date, time, speed etc.)
 def setInitialConditions():
-    dt = datetime(2017, 10, 8, 16, 55)
+    dt = datetime(2017, 10, 8, 12, 55)
     steps[0].gTime = dt
     steps[0].battSoC = 100. # Full battery pack
     steps[0].speed = 21.    # DEBUG
@@ -203,6 +207,7 @@ def simulate(pbatt_candidate):
     for index, stp in enumerate(tempWorld):
         stp.pbattExp = 360.     # DEBUG: Make sure this value is higher than the rolling resistance value; or the mathematics may fail!
         stp.pbatt = stp.pbattExp + pbatt_candidate[index - 1]
+        # stp.pbatt = stp.pbattExp    # DEBUG
         stp.advanceStep(tempSolarCar)
 
         # Copy state variables

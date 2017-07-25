@@ -216,18 +216,21 @@ class car:
     # Calculate how fast the car will drive
     def calcStepTime(self, stepInfo):
         pshaft = self.motorShaftPower(stepInfo)     # Shaft power delivered by motor
+
+        # TODO: Fix below algorithm to be more stable and less computational heavy!
         # def f(x):
         #     return self.proll(x, stepInfo) + self.pgravity(x, stepInfo) + self.paero(x, stepInfo) - pshaft
         #
         # vStepMax = fsolve(f, 22.)   # Maximum speed attainable with the power given in m s-1
         vPrev = stepInfo.speed
-
         def f(y):
             return -0.5 * self.CDA * stepInfo.rho * np.power(y, 3)- self.MASS * y * world.g*np.sin(np.deg2rad(stepInfo.inclination))+(pshaft - self.proll(y,stepInfo))
-        omega = fsolve(f, 20.)
+        # NOTE: fsolve becomes unstable with too high/low guess values. The highest speed limit is selected as a good assumption since the solution can only lie close or below it.
+        omega = fsolve(f, config.SL_HIGHWAY)
 
         def f(z):
             return stepInfo.stepDistance-(self.MASS * np.power(omega,2)*np.log((-omega+z)/(-omega+vPrev)) / (3 * (-0.5)*self.CDA*stepInfo.rho * np.power(omega,2)-self.MASS*world.g*np.sin(np.deg2rad(stepInfo.inclination))))
+        # NOTE: fsolve initial guess = vPrev considering that the next step speed shouldn't deviate too much from the first step
         airspeed = fsolve(f, vPrev)[0]  # The final resulting air speed of this step
         # ASSUMPTION: Only component of wind in direction of car travel affects the car; cross wind does not introduce any drag
         stepInfo.speed = airspeed + stepInfo.wind[0] * np.sin(np.deg2rad(90 - np.abs(stepInfo.wind[1] - stepInfo.heading)))  # Calculate ground speed
