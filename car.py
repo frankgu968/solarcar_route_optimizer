@@ -236,10 +236,13 @@ class car:
         # NOTE: fsolve initial guess = vPrev considering that the next step speed shouldn't deviate too much from the first step
         airspeed = fsolve(f, vPrev)[0]  # The final resulting air speed of this step
         # ASSUMPTION: Only component of wind in direction of car travel affects the car; cross wind does not introduce any drag
-        stepInfo.speed = airspeed + stepInfo.wind[0] * np.sin(np.deg2rad(90 - np.abs(stepInfo.wind[1] - stepInfo.heading)))  # Calculate ground speed
-
-        # Not sure how to calculate the time... Will take the mid point between the speeds and approximate it...
-        stepInfo.stepTime = stepInfo.stepDistance / ((vPrev+stepInfo.speed) / 2)
+        if airspeed <= 0:
+            stepInfo.speed = 0.         # Invalidate solution
+            stepInfo.stepTime  = -1.    # Invalidate step
+        else:
+            stepInfo.speed = airspeed + stepInfo.wind[0] * np.sin(np.deg2rad(90 - np.abs(stepInfo.wind[1] - stepInfo.heading)))  # Calculate ground speed
+            # Not sure how to calculate the time... Will take the mid point between the speeds and approximate it...
+            stepInfo.stepTime = stepInfo.stepDistance / ((vPrev+stepInfo.speed) / 2)
 
         # FIXME
         # # START INVALID TIME
@@ -254,7 +257,8 @@ class car:
         # # END INVALID TIME
 
         # Decrease remaining battery charge
-        stepInfo.battSoC -= 100 * (stepInfo.pbatt * (stepInfo.stepTime / 3600) / self.BATT_CAPACITY)
+        if stepInfo.battSoC > 0:
+            stepInfo.battSoC -= 100 * (stepInfo.pbatt * (stepInfo.stepTime / 3600) / self.BATT_CAPACITY)
 
         return stepInfo.stepTime
 

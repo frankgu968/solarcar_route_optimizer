@@ -61,13 +61,14 @@ class step:
     # Advance one distance step forward
     # Uses function from "car" class to transition the previous step state into new state
     # Assumes previous step result is already copied into current step data containers
+    # Return: step time
     def advanceStep(self, car):
         # Check for the step properties
         # TODO: Implement control stop logic
         # TODO: Implement end-of-day / beginning-of-day logic
 
         # Evaluate car's step performance
-        car.calcStepTime(self)
+        ret = car.calcStepTime(self)
 
         # Advance elapsed time
         self.eTime = self.eTime + self.stepTime
@@ -122,7 +123,7 @@ class step:
             else:
                 self.stepType = 2       # End of day decision made
                 self.processEOD(car)
-        return
+        return ret
 
     # TODO: Process end of day / beginning of day charging results
     def processEOD(self, car):

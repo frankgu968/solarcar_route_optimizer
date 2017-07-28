@@ -7,8 +7,8 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 
 import car
-import step
 import config
+import step
 from world_helpers import haversine
 
 g = 9.81  # Gravitational acceleration constant
@@ -209,7 +209,10 @@ def simulate(pbatt_candidate):
         stp.pbattExp = 250.     # DEBUG: Make sure this value is higher than the rolling resistance value; or the mathematics may fail!
         stp.pbatt = stp.pbattExp + pbatt_candidate[index]
         # stp.pbatt = 300.    # DEBUG
-        stp.advanceStep(tempSolarCar)
+
+        time = stp.advanceStep(tempSolarCar)
+        if time < 0.:
+            return 10e9     # A value so high that the algorithm will automatically reject
 
         # Copy state variables
         if index < len(tempWorld) - 1:
