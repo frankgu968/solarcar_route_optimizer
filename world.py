@@ -7,8 +7,8 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 
 import car
-import config
 import step
+import config
 from world_helpers import haversine
 
 g = 9.81  # Gravitational acceleration constant
@@ -193,21 +193,22 @@ def loadDebugData(input):
 
 # Set the starting conditions of the race (date, time, speed etc.)
 def setInitialConditions():
-    dt = datetime(2017, 10, 8, 12, 55)
+    dt = datetime(2017, 10, 8, 8, 30)
     steps[0].gTime = dt
     steps[0].battSoC = 100. # Full battery pack
-    steps[0].speed = 21.    # DEBUG
+    steps[0].speed = 0.    # DEBUG
 
 # Simulate the car driving the entire course of the race route with a battery power profile candidate as input
 def simulate(pbatt_candidate):
     # Make deep copy of the exemplar to run multithread
+    global steps
     tempSolarCar = copy.deepcopy(solarCar)
     tempWorld = copy.deepcopy(steps)
 
     for index, stp in enumerate(tempWorld):
-        stp.pbattExp = 360.     # DEBUG: Make sure this value is higher than the rolling resistance value; or the mathematics may fail!
-        stp.pbatt = stp.pbattExp + pbatt_candidate[index - 1]
-        # stp.pbatt = stp.pbattExp    # DEBUG
+        stp.pbattExp = 250.     # DEBUG: Make sure this value is higher than the rolling resistance value; or the mathematics may fail!
+        stp.pbatt = stp.pbattExp + pbatt_candidate[index]
+        # stp.pbatt = 300.    # DEBUG
         stp.advanceStep(tempSolarCar)
 
         # Copy state variables
@@ -216,5 +217,4 @@ def simulate(pbatt_candidate):
             tempWorld[index + 1].gTime = stp.gTime
             tempWorld[index + 1].speed = stp.speed
             tempWorld[index + 1].battSoC = stp.battSoC
-
     return tempWorld[-1].eTime

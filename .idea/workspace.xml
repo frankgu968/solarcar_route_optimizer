@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="2668b710-fac1-41f6-8880-c74f796944b7" name="Default" comment="- Fixed">
+    <list default="true" id="2668b710-fac1-41f6-8880-c74f796944b7" name="Default" comment="- Fixed fsolve stability problem for low initial guesses&#10;- Added full simulated WSC route waypoint file! Courtesy of Paul Babij">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Data/WSC.debug" afterPath="$PROJECT_DIR$/Data/WSC.debug" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/car.py" afterPath="$PROJECT_DIR$/car.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config.py" afterPath="$PROJECT_DIR$/config.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/optimizer.py" afterPath="$PROJECT_DIR$/optimizer.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tester.py" afterPath="$PROJECT_DIR$/tester.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/world.py" afterPath="$PROJECT_DIR$/world.py" />
     </list>
     <ignored path="Data/WSC.route" />
@@ -35,20 +38,20 @@
       <file leaf-file-name="tester.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tester.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="520">
-              <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+            <state relative-caret-position="340">
+              <caret line="31" column="25" lean-forward="false" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
               <folding>
-                <element signature="e#124#165#0" expanded="true" />
+                <element signature="e#140#181#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="optimizer.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="optimizer.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/optimizer.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+            <state relative-caret-position="20">
+              <caret line="42" column="109" lean-forward="false" selection-start-line="42" selection-start-column="109" selection-end-line="42" selection-end-column="109" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -59,8 +62,8 @@
       <file leaf-file-name="config.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="3" column="15" lean-forward="false" selection-start-line="3" selection-start-column="15" selection-end-line="3" selection-end-column="15" />
+            <state relative-caret-position="180">
+              <caret line="9" column="15" lean-forward="false" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -69,8 +72,8 @@
       <file leaf-file-name="world.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/world.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="209" column="45" lean-forward="true" selection-start-line="209" selection-start-column="45" selection-end-line="209" selection-end-column="45" />
+            <state relative-caret-position="4051">
+              <caret line="209" column="56" lean-forward="false" selection-start-line="209" selection-start-column="56" selection-end-line="209" selection-end-column="56" />
               <folding>
                 <element signature="e#215#226#0" expanded="true" />
               </folding>
@@ -81,18 +84,18 @@
       <file leaf-file-name="world_helpers.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/world_helpers.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="20">
+            <state relative-caret-position="320">
               <caret line="16" column="57" lean-forward="false" selection-start-line="16" selection-start-column="57" selection-end-line="16" selection-end-column="57" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="car.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="car.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/car.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="219" column="83" lean-forward="false" selection-start-line="219" selection-start-column="83" selection-end-line="219" selection-end-column="83" />
+            <state relative-caret-position="600">
+              <caret line="214" column="0" lean-forward="false" selection-start-line="214" selection-start-column="0" selection-end-line="214" selection-end-column="0" />
               <folding>
                 <element signature="e#148#166#0" expanded="true" />
               </folding>
@@ -103,7 +106,7 @@
       <file leaf-file-name="step.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/step.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1300">
+            <state relative-caret-position="510">
               <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
               <folding>
                 <element signature="e#166#195#0" expanded="true" />
@@ -137,6 +140,7 @@
       <find>world.step</find>
       <find>world.steps</find>
       <find>fsolve</find>
+      <find>proll</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -154,21 +158,21 @@
       <list>
         <option value="$PROJECT_DIR$/PowerBus.py" />
         <option value="$PROJECT_DIR$/world_helpers.py" />
-        <option value="$PROJECT_DIR$/optimizer.py" />
-        <option value="$PROJECT_DIR$/tester.py" />
         <option value="$PROJECT_DIR$/step.py" />
         <option value="$PROJECT_DIR$/sun.py" />
-        <option value="$PROJECT_DIR$/config.py" />
-        <option value="$PROJECT_DIR$/world.py" />
         <option value="$PROJECT_DIR$/car.py" />
+        <option value="$PROJECT_DIR$/tester.py" />
+        <option value="$PROJECT_DIR$/world.py" />
+        <option value="$PROJECT_DIR$/config.py" />
+        <option value="$PROJECT_DIR$/optimizer.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-1" />
     <option name="y" value="26" />
-    <option name="width" value="1442" />
-    <option name="height" value="851" />
+    <option name="width" value="1922" />
+    <option name="height" value="1031" />
   </component>
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -490,7 +494,14 @@
       <option name="project" value="LOCAL" />
       <updated>1500778637734</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="- Fixed fsolve stability problem for low initial guesses&#10;- Added full simulated WSC route waypoint file! Courtesy of Paul Babij">
+      <created>1500959652489</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1500959652489</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TodoView" selected-index="4">
@@ -503,18 +514,18 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-1" y="26" width="1442" height="851" extended-state="6" />
+    <frame x="-1" y="26" width="1922" height="1031" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.1125" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32977304" sideWeight="0.49722221" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28838453" sideWeight="0.23888889" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28827587" sideWeight="0.76111114" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23093922" sideWeight="0.76111114" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32965517" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39919892" sideWeight="0.69305557" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23977901" sideWeight="0.69305557" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298611" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -554,7 +565,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="Completed Sun model with irradiance and solar position" />
     <MESSAGE value="Separated testing code with sun model" />
     <MESSAGE value="Added &quot;car&quot; methods, and the &quot;step&quot; class. Scaffolded code; contents to be filled!" />
     <MESSAGE value="Work on car's array model begins. Need to complete the array mesh loading and parsing code." />
@@ -579,7 +589,8 @@
     <MESSAGE value="Added battery drainage based on simple energy I/O from each step and its associated activities. Implemented control stop time segment A and C; wait time with panels pointed towards the sun is NOT implemented yet..." />
     <MESSAGE value="Completed control stop logic" />
     <MESSAGE value="Fixed car diffuse power term for realism" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed car diffuse power term for realism" />
+    <MESSAGE value="- Fixed fsolve stability problem for low initial guesses&#10;- Added full simulated WSC route waypoint file! Courtesy of Paul Babij" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Fixed fsolve stability problem for low initial guesses&#10;- Added full simulated WSC route waypoint file! Courtesy of Paul Babij" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -587,13 +598,8 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/world.py</url>
-          <line>219</line>
-          <option name="timeStamp" value="86" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/car.py</url>
-          <line>235</line>
-          <option name="timeStamp" value="87" />
+          <line>209</line>
+          <option name="timeStamp" value="107" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -603,11 +609,16 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="88" />
+      <option name="time" value="108" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="stepInfo.stepNum" language="Python" />
+        <watch expression="stepInfo.battSoC" language="Python" />
+        <watch expression="stepInfo.gTime" language="Python" />
+        <watch expression="stepInfo.stepNum" language="Python" />
+        <watch expression="stepInfo.eTime" language="Python" />
+        <watch expression="fit[0][0]" language="Python" />
       </configuration>
     </watches-manager>
   </component>
@@ -737,7 +748,7 @@
         <state relative-caret-position="720">
           <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
           <folding>
-            <element signature="e#124#165#0" expanded="true" />
+            <element signature="e#140#181#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -757,7 +768,7 @@
         <state relative-caret-position="580">
           <caret line="34" column="29" lean-forward="false" selection-start-line="34" selection-start-column="29" selection-end-line="34" selection-end-column="29" />
           <folding>
-            <element signature="e#124#165#0" expanded="true" />
+            <element signature="e#140#181#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -815,7 +826,7 @@
         <state relative-caret-position="320">
           <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
           <folding>
-            <element signature="e#124#165#0" expanded="true" />
+            <element signature="e#140#181#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -876,7 +887,7 @@
         <state relative-caret-position="257">
           <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="36" />
           <folding>
-            <element signature="e#124#165#0" expanded="true" />
+            <element signature="e#140#181#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -934,7 +945,7 @@
         <state relative-caret-position="320">
           <caret line="19" column="0" lean-forward="true" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
           <folding>
-            <element signature="e#124#165#0" expanded="true" />
+            <element signature="e#140#181#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -980,13 +991,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/local/lib/python2.7/dist-packages/deap/algorithms.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1100">
-          <caret line="146" column="0" lean-forward="false" selection-start-line="146" selection-start-column="0" selection-end-line="146" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/lib/python2.7/copy.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="131">
@@ -1004,16 +1008,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/tester.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="520">
-          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding>
-            <element signature="e#124#165#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/lib/python2.7/dist-packages/scipy/optimize/optimize.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -1021,17 +1015,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config.py">
+    <entry file="file:///usr/local/lib/python2.7/dist-packages/deap/algorithms.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
-          <caret line="3" column="15" lean-forward="false" selection-start-line="3" selection-start-column="15" selection-end-line="3" selection-end-column="15" />
+          <caret line="135" column="43" lean-forward="true" selection-start-line="135" selection-start-column="43" selection-end-line="135" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/world_helpers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="16" column="57" lean-forward="false" selection-start-line="16" selection-start-column="57" selection-end-line="16" selection-end-column="57" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tester.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="31" column="25" lean-forward="false" selection-start-line="31" selection-start-column="25" selection-end-line="31" selection-end-column="25" />
+          <folding>
+            <element signature="e#140#181#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/step.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1300">
+        <state relative-caret-position="510">
           <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
           <folding>
             <element signature="e#166#195#0" expanded="true" />
@@ -1039,40 +1050,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/optimizer.py">
+    <entry file="file://$PROJECT_DIR$/car.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+        <state relative-caret-position="600">
+          <caret line="214" column="0" lean-forward="false" selection-start-line="214" selection-start-column="0" selection-end-line="214" selection-end-column="0" />
           <folding>
-            <element signature="e#0#22#0" expanded="true" />
+            <element signature="e#148#166#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/world_helpers.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20">
-          <caret line="16" column="57" lean-forward="false" selection-start-line="16" selection-start-column="57" selection-end-line="16" selection-end-column="57" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/world.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="209" column="45" lean-forward="true" selection-start-line="209" selection-start-column="45" selection-end-line="209" selection-end-column="45" />
+        <state relative-caret-position="4051">
+          <caret line="209" column="56" lean-forward="false" selection-start-line="209" selection-start-column="56" selection-end-line="209" selection-end-column="56" />
           <folding>
             <element signature="e#215#226#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/car.py">
+    <entry file="file://$PROJECT_DIR$/config.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="219" column="83" lean-forward="false" selection-start-line="219" selection-start-column="83" selection-end-line="219" selection-end-column="83" />
+        <state relative-caret-position="180">
+          <caret line="9" column="15" lean-forward="false" selection-start-line="9" selection-start-column="15" selection-end-line="9" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/optimizer.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="42" column="109" lean-forward="false" selection-start-line="42" selection-start-column="109" selection-end-line="42" selection-end-column="109" />
           <folding>
-            <element signature="e#148#166#0" expanded="true" />
+            <element signature="e#0#22#0" expanded="true" />
           </folding>
         </state>
       </provider>

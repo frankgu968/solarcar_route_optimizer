@@ -20,7 +20,7 @@ class car:
     BAT_CHARGE_EFF = 0.85         # Battery charging efficiency
     ARRAY_EFF = 0.243   # Solar panel nominal efficiency (24.3%)
     MOT_EFF = 0.95      # Motor efficiency (95%)
-    DIFFUSE_EFF = 0.3   # Diffuse array collector power factor (30%)
+    DIFFUSE_EFF = 0.5   # Diffuse array collector power factor (30%)
 
     # Car dependent parameters
     BATT_CAPACITY = 6300    # Battery capacity (Wh)
@@ -28,7 +28,7 @@ class car:
     Ptire = 517e3           # Tire pressure (~75 psi)
 #    alpha
 #    beta =
-    MASS = 250.         # Solar car mass (250 Kg)
+    MASS = 290.         # Solar car mass (290 Kg)
 
     # Dynamic variables
     arrayArea = 0.  # Area of the solar array (m2)
@@ -92,77 +92,80 @@ class car:
     # Includes array geometry and temperature effects
     # Assumes array temperature = ambient (due to high speed free stream air)
     def arrayIn(self, stepInfo, mode=0):
-        if mode == 2:
-            # End of day directional charging
-            sunInfo = sun.info(stepInfo.gTime, stepInfo.timezone, stepInfo.location)
-            insolation = sun.irradiance(sunInfo)  # The amount of power hitting the surface of the Earth
+        if config.ARRAY_ON:
+            if mode == 2:
+                # End of day directional charging
+                sunInfo = sun.info(stepInfo.gTime, stepInfo.timezone, stepInfo.location)
+                insolation = sun.irradiance(sunInfo)  # The amount of power hitting the surface of the Earth
 
-            normalSunVec = np.array(
-                [0, 0, -1])  # Assumes that the sun panel's geometric normal is pointing directly at the sun
-            meshPowerMat = np.matmul(self.arrayGeometry, normalSunVec) * 0.5 * insolation * self.ARRAY_EFF
-            # Mesh elements receiving direct sunlight
-            meshDirect = np.extract(np.ma.masked_less(meshPowerMat, 0.), meshPowerMat)
-
-            # Mesh elements receiving diffuse sunlight
-            # ASSUMPTION: Panel elements facing indirectly towards the sun will receive same solar collection efficiency
-            # as those directly due to Gochermann high-angle refraction crystal lamination
-            meshDiffuse = np.extract(np.ma.masked_greater(meshPowerMat, 0.), meshPowerMat) * (-1.0)
-            power = np.sum(meshDirect) + np.sum(meshDiffuse)
-        else:
-            sunInfo = sun.info(stepInfo.gTime, stepInfo.timezone, stepInfo.location)
-            insolation = sun.irradiance(sunInfo)  # The amount of power hitting the surface of the Earth
-
-            if config.ARRAY_MESH_CALCULATION:
-                # Create the sun's unit vector with relative to the car's heading and azimuth
-                modSunVec = -np.array([np.sin(np.deg2rad(sunInfo[1] - stepInfo.heading)) * np.cos(np.deg2rad(sunInfo[0] - stepInfo.inclination)),
-                                   np.cos(np.deg2rad(sunInfo[1] - stepInfo.heading)) * np.sin(np.deg2rad(sunInfo[0] - stepInfo.inclination)),
-                                   np.sin(np.deg2rad(sunInfo[0] - stepInfo.inclination))])
-
-                meshPowerMat = np.matmul(self.arrayGeometry, modSunVec) * 0.5 * insolation * self.ARRAY_EFF
+                normalSunVec = np.array(
+                    [0, 0, -1])  # Assumes that the sun panel's geometric normal is pointing directly at the sun
+                meshPowerMat = np.matmul(self.arrayGeometry, normalSunVec) * 0.5 * insolation * self.ARRAY_EFF
                 # Mesh elements receiving direct sunlight
                 meshDirect = np.extract(np.ma.masked_less(meshPowerMat, 0.), meshPowerMat)
+
                 # Mesh elements receiving diffuse sunlight
-                # ASSUMPTION: Panel elements facing away from the Sun vector will receive ambient power
-                # FIXME: Tune the ambient diffuse term. (power contribution = Ambient efficieny * unitPower)
-                meshDiffuse = np.extract(np.ma.masked_greater(meshPowerMat, 0.), meshPowerMat) * (-self.DIFFUSE_EFF)
+                # ASSUMPTION: Panel elements facing indirectly towards the sun will receive same solar collection efficiency
+                # as those directly due to Gochermann high-angle refraction crystal lamination
+                meshDiffuse = np.extract(np.ma.masked_greater(meshPowerMat, 0.), meshPowerMat) * (-1.0)
                 power = np.sum(meshDirect) + np.sum(meshDiffuse)
-
-                # sunVec = -np.array([np.sin(np.deg2rad(sunInfo[1])) * np.cos(np.deg2rad(sunInfo[0])),
-                #                     np.cos(np.deg2rad(sunInfo[1])) * np.sin(np.deg2rad(sunInfo[0])),
-                #                     np.sin(np.deg2rad(sunInfo[0]))])
-                #
-                # tRotation = np.array([[np.cos(np.deg2rad(-stepInfo.heading)), -np.sin(-np.deg2rad(stepInfo.heading)), 0],
-                #                       [np.sin(np.deg2rad(-stepInfo.heading)), np.cos(-np.deg2rad(stepInfo.heading)), 0],
-                #                       [0, 0, 1]])
-                #
-                # power = 0
-                # for meshElement in self.arrayGeometry:
-                #     # Rotate the car in 3D with heading and elevation
-                #     # Rotate the car's heading
-                #
-                #     tempVec = np.matmul(tRotation, meshElement)  # Transformed mesh element normal vector
-                #
-                #     # Rotate the car's inclination
-                #     # 1. Obtain the axis of rotation
-                #     axis = np.cross(meshElement, np.array([meshElement[0], meshElement[1], 0]))
-                #     # 2. Apply Euler-Rodrigues formula to create transformation matrix
-                #     tElevation = world_helpers.rotation_matrix(axis, np.deg2rad(-stepInfo.inclination))
-                #     # 3. Apply transformation
-                #     meshVec = np.matmul(tElevation, tempVec)
-                #     unitPower = insolation * (0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
-                #
-                #     if unitPower > 0:
-                #         power += unitPower
-                #     else:
-                #
-                #         power += -0.3 * unitPower
-
             else:
-                # Flat panel model; No consideration to array geometry
-                power = insolation * self.arrayArea * self.ARRAY_EFF * np.sin(90-np.deg2rad(np.abs(sunInfo[0]-stepInfo.inclination)))
+                sunInfo = sun.info(stepInfo.gTime, stepInfo.timezone, stepInfo.location)
+                insolation = sun.irradiance(sunInfo)  # The amount of power hitting the surface of the Earth
 
-        # TODO: Implement temperature effects on panel efficiency
-        # TODO: Implement cloud coverage effects
+                if config.ARRAY_MESH_CALCULATION:
+                    # Create the sun's unit vector with relative to the car's heading and azimuth
+                    modSunVec = -np.array([np.sin(np.deg2rad(sunInfo[1] - stepInfo.heading)) * np.cos(np.deg2rad(sunInfo[0] - stepInfo.inclination)),
+                                       np.cos(np.deg2rad(sunInfo[1] - stepInfo.heading)) * np.sin(np.deg2rad(sunInfo[0] - stepInfo.inclination)),
+                                       np.sin(np.deg2rad(sunInfo[0] - stepInfo.inclination))])
+
+                    meshPowerMat = np.matmul(self.arrayGeometry, modSunVec) * 0.5 * insolation * self.ARRAY_EFF
+                    # Mesh elements receiving direct sunlight
+                    meshDirect = np.extract(np.ma.masked_less(meshPowerMat, 0.), meshPowerMat)
+                    # Mesh elements receiving diffuse sunlight
+                    # ASSUMPTION: Panel elements facing away from the Sun vector will receive ambient power
+                    # FIXME: Tune the ambient diffuse term. (power contribution = Ambient efficieny * unitPower)
+                    meshDiffuse = np.extract(np.ma.masked_greater(meshPowerMat, 0.), meshPowerMat) * (-self.DIFFUSE_EFF)
+                    power = np.sum(meshDirect) + np.sum(meshDiffuse)
+
+                    # sunVec = -np.array([np.sin(np.deg2rad(sunInfo[1])) * np.cos(np.deg2rad(sunInfo[0])),
+                    #                     np.cos(np.deg2rad(sunInfo[1])) * np.sin(np.deg2rad(sunInfo[0])),
+                    #                     np.sin(np.deg2rad(sunInfo[0]))])
+                    #
+                    # tRotation = np.array([[np.cos(np.deg2rad(-stepInfo.heading)), -np.sin(-np.deg2rad(stepInfo.heading)), 0],
+                    #                       [np.sin(np.deg2rad(-stepInfo.heading)), np.cos(-np.deg2rad(stepInfo.heading)), 0],
+                    #                       [0, 0, 1]])
+                    #
+                    # power = 0
+                    # for meshElement in self.arrayGeometry:
+                    #     # Rotate the car in 3D with heading and elevation
+                    #     # Rotate the car's heading
+                    #
+                    #     tempVec = np.matmul(tRotation, meshElement)  # Transformed mesh element normal vector
+                    #
+                    #     # Rotate the car's inclination
+                    #     # 1. Obtain the axis of rotation
+                    #     axis = np.cross(meshElement, np.array([meshElement[0], meshElement[1], 0]))
+                    #     # 2. Apply Euler-Rodrigues formula to create transformation matrix
+                    #     tElevation = world_helpers.rotation_matrix(axis, np.deg2rad(-stepInfo.inclination))
+                    #     # 3. Apply transformation
+                    #     meshVec = np.matmul(tElevation, tempVec)
+                    #     unitPower = insolation * (0.5 * np.dot(sunVec, meshVec)) * self.ARRAY_EFF
+                    #
+                    #     if unitPower > 0:
+                    #         power += unitPower
+                    #     else:
+                    #
+                    #         power += -0.3 * unitPower
+
+                else:
+                    # Flat panel model; No consideration to array geometry
+                    power = insolation * self.arrayArea * self.ARRAY_EFF * np.sin(90-np.deg2rad(np.abs(sunInfo[0]-stepInfo.inclination)))
+
+            # TODO: Implement temperature effects on panel efficiency
+            # TODO: Implement cloud coverage effects
+        else:
+            power = 0.
 
         stepInfo.pin = power
         return power

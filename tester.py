@@ -1,13 +1,14 @@
 # I use this file for tests; don't mind it...
 # Author: Frank Gu
 # Date: July 1st, 2017
-# Dependencies: NumPy, ElementTree
+# Dependencies: NumPy, ElementTree, matplotlib, tk
 
 from timeit import default_timer as timer
 
-import optimizer
+import matplotlib.pyplot as plt
 import world
-
+import optimizer
+import config
 
 # import step
 # from datetime import datetime
@@ -16,8 +17,11 @@ import world
 def main():
     # fname = raw_input('Please specify geometry file location: ')
     fname = './Data/array.msh'
-    # world.preprocessWorld('./Data/waypoints.gpx', [20, 50])
-    # world.preprocessDebugWorld('./Data/WSC.route')
+    if config.USE_SMALL_ROUTE:
+        world.preprocessWorld('./Data/waypoints.gpx',[])
+    else:
+        world.preprocessWorld('./Data/route_debug_full.gpx', [322, 633, 988, 1211, 1496, 1756, 2178, 2432, 2719])
+    world.preprocessDebugWorld('./Data/WSC.route')
     world.loadDebugData('./Data/WSC.debug')
     world.importWorld(fname,'')
 
@@ -25,9 +29,11 @@ def main():
     world.setInitialConditions()
 
     # world.simulate({})
-
+    if config.SHOW_PLOTS:
+        plt.ion()
     start = timer()
     optimizer.optimize()
+    #world.simulate({})
     end = timer()
 
     print 'Compute time: ' + str(end - start)
