@@ -5,10 +5,10 @@
 
 from timeit import default_timer as timer
 
-import matplotlib.pyplot as plt
-import world
-import optimizer
 import config
+import optimizer
+import world
+
 
 # import step
 # from datetime import datetime
@@ -29,8 +29,6 @@ def main():
     world.setInitialConditions()
 
     # world.simulate({})
-    if config.SHOW_PLOTS:
-        plt.ion()
     start = timer()
     optimizer.optimize()
     #world.simulate({})

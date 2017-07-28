@@ -1,15 +1,19 @@
+import copy
 import multiprocessing
 import numpy as np
 
 import matplotlib.pyplot as plt
-import config
-import world
-import copy
-
-from deap.algorithms import varAnd
 from deap import base
 from deap import creator
 from deap import tools
+from deap.algorithms import varAnd
+
+import config
+import world
+
+if config.SHOW_PLOTS:
+    plt.ion()
+    fig, ax = plt.subplots(1, 2)    # 1 row, 2 column figure
 
 
 def evalOneMax(individual):
@@ -34,6 +38,7 @@ def cxTwoPointCopy(ind1, ind2):
 
 
 def optimize():
+
     creator.create("FitnessMin", base.Fitness, weights=(-1.0,))  # Minimize the fitness function
     creator.create("Individual", np.ndarray, fitness=creator.FitnessMin)
 
@@ -169,46 +174,7 @@ def run(population, toolbox, cxpb, mutpb, ngen, stats=None,
 
         # Plot the best individual (if enabled)
         if config.SHOW_PLOTS:
-            # Run the simulation with the best individual again
-            tempSolarCar = copy.deepcopy(world.solarCar)
-            tempWorld = copy.deepcopy(world.steps)
-
-            speeds = []
-            axis = []
-            inclination = []
-            soc = []
-
-            for index, stp in enumerate(tempWorld):
-                stp.pbattExp = 250.  # DEBUG: Make sure this value is higher than the rolling resistance value; or the mathematics may fail!
-                stp.pbatt = stp.pbattExp + halloffame[0][index]
-                stp.advanceStep(tempSolarCar)
-
-                # Copy state variables
-                if index < len(tempWorld) - 1:
-                    tempWorld[index + 1].eTime = stp.eTime
-                    tempWorld[index + 1].gTime = stp.gTime
-                    tempWorld[index + 1].speed = stp.speed
-                    tempWorld[index + 1].battSoC = stp.battSoC
-
-                # Add to variable lists
-                speeds.append(stp.speed * 3.6)  # Must convert it to kph
-                axis.append(stp.stepNum)
-                inclination.append(stp.inclination * 10)
-                soc.append(stp.battSoC)
-
-            # Plot the data
-            plt.clf()
-            plt.plot(axis, speeds, label='Speed')
-            plt.plot(axis, soc, label='SoC')
-            plt.plot(axis, inclination, label='Inclination')
-            plt.title('GA Live Plot (Generation=' + str(gen)+')')
-            plt.xlabel('Distance / Km')
-            plt.ylabel('Velocity / Kph')
-            plt.legend()
-            plt.pause(0.01)
-
-            # Print the race finish time:
-            print "Race finish date and time: " + str(stp.gTime)
+            plotData(halloffame[0], [x[0] for x in fitnesses], gen)
 
         # Replace the current population by the offspring
         population[:] = offspring
@@ -220,3 +186,55 @@ def run(population, toolbox, cxpb, mutpb, ngen, stats=None,
             print logbook.stream
 
     return population, logbook
+
+
+def plotData(hof, popFitnesses, generation):
+    # Run the simulation with the best individual again
+    tempSolarCar = copy.deepcopy(world.solarCar)
+    tempWorld = copy.deepcopy(world.steps)
+
+    speeds = []
+    axis = []
+    inclination = []
+    soc = []
+
+    for index, stp in enumerate(tempWorld):
+        stp.pbattExp = 250.  # DEBUG: Make sure this value is higher than the rolling resistance value; or the mathematics may fail!
+        stp.pbatt = stp.pbattExp + hof[index]
+        stp.advanceStep(tempSolarCar)
+
+        # Copy state variables
+        if index < len(tempWorld) - 1:
+            tempWorld[index + 1].eTime = stp.eTime
+            tempWorld[index + 1].gTime = stp.gTime
+            tempWorld[index + 1].speed = stp.speed
+            tempWorld[index + 1].battSoC = stp.battSoC
+
+        # Add to variable lists
+        speeds.append(stp.speed * 3.6)  # Must convert it to kph
+        axis.append(stp.stepNum)
+        inclination.append(stp.inclination * 10)
+        soc.append(stp.battSoC)
+
+    # Plot the data
+    ax[0].cla()  # Clear axes
+    ax[0].plot(axis, speeds, label='Speed')
+    ax[0].plot(axis, soc, label='SoC')
+    ax[0].plot(axis, inclination, label='Inclination')
+    ax[0].set_title('GA Live Plot (Generation=' + str(generation) + ')')
+    ax[0].set_xlabel('Distance / Km')
+    ax[0].set_ylabel('Velocity / Kph')
+    ax[0].legend()
+
+    # Plot the histogram
+    ax[1].cla()
+    ax[1].hist(popFitnesses)
+    ax[1].set_title('Race time histogram')
+    ax[1].set_xlabel('Value')
+    ax[1].set_ylabel('Frequency')
+
+    # Pause to redraw the canvas
+    plt.pause(0.01)
+
+    # Print the race finish time:
+    print "Race finish date and time: " + str(stp.gTime)
