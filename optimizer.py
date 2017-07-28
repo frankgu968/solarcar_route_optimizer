@@ -16,26 +16,12 @@ if config.SHOW_PLOTS:
     fig, ax = plt.subplots(1, 2)    # 1 row, 2 column figure
 
 
+
+# Main cost function
 def evalOneMax(individual):
     # TODO: Implement cost function with all the mathematical constraints
     fitness = world.simulate(individual)
     return fitness,
-
-
-def cxTwoPointCopy(ind1, ind2):
-    size = len(ind1)
-    cxpoint1 = np.random.randint(1, size)
-    cxpoint2 = np.random.randint(1, size - 1)
-    if cxpoint2 >= cxpoint1:
-        cxpoint2 += 1
-    else:  # Swap the two cx points
-        cxpoint1, cxpoint2 = cxpoint2, cxpoint1
-
-    ind1[cxpoint1:cxpoint2], ind2[cxpoint1:cxpoint2] \
-        = ind2[cxpoint1:cxpoint2].copy(), ind1[cxpoint1:cxpoint2].copy()
-
-    return ind1, ind2
-
 
 def optimize():
 
@@ -221,7 +207,7 @@ def plotData(hof, popFitnesses, generation):
     ax[0].plot(axis, speeds, label='Speed')
     ax[0].plot(axis, soc, label='SoC')
     ax[0].plot(axis, inclination, label='Inclination')
-    ax[0].set_title('GA Live Plot (Generation=' + str(generation) + ')')
+    ax[0].set_title('GA Live Plot (Generation=' + str(generation) + ', Time=' + str(int(tempWorld[-1].eTime)) + 's)')
     ax[0].set_xlabel('Distance / Km')
     ax[0].set_ylabel('Velocity / Kph')
     ax[0].legend()
@@ -238,3 +224,18 @@ def plotData(hof, popFitnesses, generation):
 
     # Print the race finish time:
     print "Race finish date and time: " + str(stp.gTime)
+
+
+def cxTwoPointCopy(ind1, ind2):
+    size = len(ind1)
+    cxpoint1 = np.random.randint(1, size)
+    cxpoint2 = np.random.randint(1, size - 1)
+    if cxpoint2 >= cxpoint1:
+        cxpoint2 += 1
+    else:  # Swap the two cx points
+        cxpoint1, cxpoint2 = cxpoint2, cxpoint1
+
+    ind1[cxpoint1:cxpoint2], ind2[cxpoint1:cxpoint2] \
+        = ind2[cxpoint1:cxpoint2].copy(), ind1[cxpoint1:cxpoint2].copy()
+
+    return ind1, ind2
