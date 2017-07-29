@@ -140,8 +140,12 @@ def run(population, toolbox, cxpb, mutpb, ngen, stats=None,
     if verbose:
         print logbook.stream
 
+    # Best fitness score container
+    lastStats = np.asarray([0,0])
+
     # Begin the generational process
     for gen in range(1, ngen + 1):
+
         # Select the next generation individuals
         offspring = toolbox.select(population, len(population))
 
@@ -170,6 +174,15 @@ def run(population, toolbox, cxpb, mutpb, ngen, stats=None,
         logbook.record(gen=gen, nevals=len(invalid_ind), **record)
         if verbose:
             print logbook.stream
+
+        # Early termination - if no improvement over a number of generations
+        if int(logbook[gen]['min']) == lastStats[0]:
+            lastStats[1] += 1
+            if lastStats[1] > config.MAX_SAME_FITNESS:
+                return population, logbook
+        else:
+            lastStats[0] = int(logbook[gen]['min'])
+
 
     return population, logbook
 
