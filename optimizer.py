@@ -182,6 +182,7 @@ def run(population, toolbox, cxpb, mutpb, ngen, stats=None,
                 return population, logbook
         else:
             lastStats[0] = int(logbook[gen]['min'])
+            lastStats[1] = 0    # Reset the duplication counter
 
 
     return population, logbook
