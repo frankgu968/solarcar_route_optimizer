@@ -1,16 +1,17 @@
 
 # Simulation configurations
-USE_SMALL_ROUTE = False
+USE_SMALL_ROUTE = True
 SHOW_PLOTS = True
 ARRAY_MESH_CALCULATION = False
 EN_WIND = False
 ARRAY_ON = True
 
 # Genetic Algorithm configurations
-GA_POP_NUM = 10              # Population per generation
-GA_GEN_NUM = 100             # Number of generations
-GENERATIONAL_SURVIVAL = 1    # Number of individuals that survive per generation
+GA_POP_NUM = 50              # Population per generation
+GA_GEN_NUM = 600             # Number of generations
+GENERATIONAL_SURVIVAL = 3    # Number of individuals that survive per generation
 GA_MULTITHREAD = True       # Enable multi-threading
+MAX_SAME_FITNESS = 5
 
 # Route parameters
 SL_CONTROL_STOP = 16.67  # Control stop speed limit (ms-1)

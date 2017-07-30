@@ -5,14 +5,15 @@
 
 from timeit import default_timer as timer
 
+# import step
+# from datetime import datetime
+# import car
+import matplotlib.pyplot as plt
+
 import config
 import optimizer
 import world
 
-
-# import step
-# from datetime import datetime
-# import car
 
 def main():
     # fname = raw_input('Please specify geometry file location: ')
@@ -35,6 +36,8 @@ def main():
     end = timer()
 
     print 'Compute time: ' + str(end - start)
+    plt.ioff()
+    plt.show()
     # Finds average solar power of array across the whole day
     # jd1 = 0
     # stp = step.step(1, 35, [-12.462827, 130.841782], 500.0, 1500., 130.,  0., 135., 0., [0.,0.], 0, 0.)
